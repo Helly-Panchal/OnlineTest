@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using OnlineTest.Model;
 using OnlineTest.Model.Interfaces;
 using OnlineTest.Model.Repository;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.GetDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -14,30 +18,31 @@ namespace OnlineTest.Services.Services
 {
     public class TestService : ITestService
     {
+        #region Fields
+        private readonly IMapper _mapper;
         private readonly ITestRepository _testRepository;
         private readonly ITechnologyRepository _technologyRepository;
+        #endregion
 
-        public TestService(ITestRepository testRepository, ITechnologyRepository technologyRepository)
+        #region Constructor
+        public TestService(ITestRepository testRepository, ITechnologyRepository technologyRepository, IMapper mapper)
         {
             _testRepository = testRepository;
             _technologyRepository = technologyRepository;
+            _mapper = mapper;
         }
+        #endregion
 
+        #region Methods
         public ResponseDTO GetTest()
         {
             var response = new ResponseDTO();
             try
             {
-                var tests = _testRepository.GetTest().Select(test => new TestDTO()
-                {
-                    Id = test.Id,
-                    TestName = test.TestName,
-                    Description = test.Description,
-                    ExpireOn = test.ExpireOn,
-                    TechnologyId = test.TechnologyId
-                }).ToList();
+                var result = _mapper.Map<List<GetTestDTO>>(_testRepository.GetTest().ToList());
+
                 response.Status = 200;
-                response.Data = tests;
+                response.Data = result;
                 response.Message = "Ok";
             }
             catch (Exception ex)
@@ -48,22 +53,15 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
         public ResponseDTO GetTestUsingPagination(int PageNo, int RowsPerPage)
         {
             var response = new ResponseDTO();
             try
             {
-                var test = _testRepository.GetTestUsingPagination(PageNo, RowsPerPage).Select(s => new TestDTO
-                {
-                    Id = s.Id,
-                    TestName = s.TestName,
-                    Description = s.Description,
-                    ExpireOn = s.ExpireOn,
-                    TechnologyId = s.TechnologyId
-                }).ToList();
+                var result = _mapper.Map<List<GetTestDTO>>(_testRepository.GetTestUsingPagination(PageNo, RowsPerPage).ToList());
+
                 response.Status = 200;
-                response.Data = test;
+                response.Data = result;
                 response.Message = "Ok";
             }
             catch (Exception ex)
@@ -74,7 +72,6 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
         public ResponseDTO GetTestById(int id)
         {
             var response = new ResponseDTO();
@@ -89,14 +86,8 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var result = new TestDTO()
-                {
-                    Id = testById.Id,
-                    TestName = testById.TestName,
-                    Description = testById.Description,
-                    ExpireOn = testById.ExpireOn,
-                    TechnologyId = testById.TechnologyId
-                };
+                var result = _mapper.Map<List<GetTestDTO>>(testById);
+
                 response.Status = 200;
                 response.Data = result;
                 response.Message = "Ok";
@@ -109,8 +100,7 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
-        public ResponseDTO AddTest(TestDTO test)
+        public ResponseDTO AddTest(AddTestDTO test)
         {
             var response = new ResponseDTO();
             try
@@ -125,15 +115,7 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var addFlag = _testRepository.AddTest(new Test
-                {
-                    TestName = test.TestName,
-                    Description = test.Description,
-                    CreatedBy = test.CreatedBy,
-                    CreatedOn = DateTime.UtcNow,
-                    ExpireOn = test.ExpireOn,
-                    TechnologyId = test.TechnologyId
-                });
+                var addFlag = _testRepository.AddTest(_mapper.Map<Test>(test));
 
                 if (addFlag)
                 {
@@ -147,7 +129,7 @@ namespace OnlineTest.Services.Services
                     response.Error = "Test is not added";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.Status = 500;
                 response.Message = "Internal Server Error";
@@ -155,19 +137,12 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-        public ResponseDTO UpdateTest(TestDTO test)
+        public ResponseDTO UpdateTest(UpdateTestDTO test)
         {
             var response = new ResponseDTO();
             try
             {
-                
-                var updateFlag = _testRepository.UpdateTest(new Test
-                {
-                    Id = test.Id,
-                    TestName = test.TestName,
-                    Description = test.Description,
-                    ExpireOn = test.ExpireOn,
-                });
+                var updateFlag = _testRepository.UpdateTest(_mapper.Map<Test>(test));
 
                 if (updateFlag)
                 {
@@ -190,5 +165,7 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
+        #endregion
+
     }
 }

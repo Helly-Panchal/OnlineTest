@@ -1,5 +1,8 @@
 ﻿using OnlineTest.Model;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.GetDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +17,10 @@ namespace OnlineTest.Services.Interface
         ResponseDTO GetUsersUsingPagination(int PageNo, int RowsPerPage);
         ResponseDTO GetUserById(int id);
         ResponseDTO GetUserByEmail(string email);
-        ResponseDTO AddUser(UserDTO user);
-        ResponseDTO UpdateUser(UserDTO user);
+        ResponseDTO AddUser(AddUserDTO user);
+        ResponseDTO UpdateUser(UpdateUserDTO user);
         ResponseDTO DeleteUser(int Id);
-        ResponseDTO IsUserExists(TokenDTO model);
+        GetUserDTO IsUserExists(TokenDTO model);
 
     }
 }

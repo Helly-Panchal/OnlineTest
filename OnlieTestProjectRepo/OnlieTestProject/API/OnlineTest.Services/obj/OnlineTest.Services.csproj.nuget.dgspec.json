@@ -119,6 +119,10 @@
               "target": "Package",
               "version": "[12.0.0, )"
             },
+            "Castle.Windsor": {
+              "target": "Package",
+              "version": "[5.1.2, )"
+            },
             "Xamarin.Essentials": {
               "target": "Package",
               "version": "[1.7.5, )"

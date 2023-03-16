@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineTest.Model;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.GetDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
 using Xamarin.Essentials;
 
@@ -14,7 +17,7 @@ namespace OnlineTest.Controllers
     public class UserController : ControllerBase
     {
         #region field
-        public readonly IUserService _userService;
+        private readonly IUserService _userService;
         #endregion
 
         #region Constructor
@@ -27,19 +30,19 @@ namespace OnlineTest.Controllers
         #region Methods
 
         [HttpGet]
-        public ActionResult<UserDTO> GetUsers(int PageNo, int RowsPerPage)
+        public ActionResult<GetUserDTO> GetUsers(int PageNo, int RowsPerPage)
         {
             return Ok(_userService.GetUsersUsingPagination(PageNo, RowsPerPage));
         }
 
         [HttpPost]
-        public IActionResult AddUser(UserDTO user)
+        public IActionResult AddUser(AddUserDTO user)
         {
             return Ok(_userService.AddUser(user));
         }
 
         [HttpPut]
-        public IActionResult UpdateUser(UserDTO user)
+        public IActionResult UpdateUser(UpdateUserDTO user)
         {
             return Ok(_userService.UpdateUser(user));
         }

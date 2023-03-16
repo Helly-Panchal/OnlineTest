@@ -11,5 +11,6 @@ namespace OnlineTest.Services.DTO.AddDTO
 
         [Required(ErrorMessage = "This field is required")]
         public int CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     }
 }

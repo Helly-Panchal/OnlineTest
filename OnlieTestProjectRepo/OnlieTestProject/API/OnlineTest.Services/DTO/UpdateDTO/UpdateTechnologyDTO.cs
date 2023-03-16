@@ -12,5 +12,6 @@ namespace OnlineTest.Services.DTO.UpdateDTO
         [MaxLength(50, ErrorMessage = "Technology name can not be longer than 50 characters.")]
         public string TechName { get; set; }
         public int ModifiedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; } = DateTime.UtcNow;
     }
 }

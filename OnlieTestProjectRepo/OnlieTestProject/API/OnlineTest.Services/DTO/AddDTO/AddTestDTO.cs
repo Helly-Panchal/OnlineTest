@@ -6,6 +6,7 @@
         public string Description { get; set; }
         public int CreatedBy { get; set; }
         public DateTime? ExpireOn { get; set; }
-        public int TechnologyId { get; set; }   //fk
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public int TechnologyId { get; set; } 
     }
 }

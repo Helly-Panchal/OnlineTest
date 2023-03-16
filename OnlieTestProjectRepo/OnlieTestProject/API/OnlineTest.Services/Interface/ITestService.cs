@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 
 namespace OnlineTest.Services.Interface
 {
@@ -12,7 +14,7 @@ namespace OnlineTest.Services.Interface
         ResponseDTO GetTest();
         ResponseDTO GetTestUsingPagination(int PageNo, int RowsPerPage);
         ResponseDTO GetTestById(int id);
-        ResponseDTO AddTest(TestDTO test);
-        ResponseDTO UpdateTest(TestDTO test);
+        ResponseDTO AddTest(AddTestDTO test);
+        ResponseDTO UpdateTest(UpdateTestDTO test);
     }
 }

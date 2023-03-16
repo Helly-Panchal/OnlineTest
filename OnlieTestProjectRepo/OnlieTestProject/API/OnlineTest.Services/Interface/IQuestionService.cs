@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 
 namespace OnlineTest.Services.Interface
 {
@@ -11,7 +13,7 @@ namespace OnlineTest.Services.Interface
     {
         ResponseDTO GetQuestion();
         ResponseDTO GetQuestionById(int id);
-        ResponseDTO AddQuestion(QuestionDTO question);
-        ResponseDTO UpdateQuestion(QuestionDTO question);
+        ResponseDTO AddQuestion(AddQuestionDTO question);
+        ResponseDTO UpdateQuestion(UpdateQuestionDTO question);
     }
 }

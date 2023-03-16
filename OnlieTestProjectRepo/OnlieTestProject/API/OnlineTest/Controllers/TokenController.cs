@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using OnlineTest.Model;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.GetDTO;
 using OnlineTest.Services.Interface;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -126,7 +127,7 @@ namespace OnlineTest.Controllers
             }
         }
 
-        private async Task GetJwt(UserDTO sessionModel, string refreshToken)
+        private async Task GetJwt(GetUserDTO sessionModel, string refreshToken)
         {
             var now = DateTime.UtcNow;
             var claims = new[]

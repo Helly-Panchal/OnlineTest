@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineTest.Model;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.GetDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
 
 namespace OnlineTest.Controllers
@@ -11,7 +14,7 @@ namespace OnlineTest.Controllers
     public class QuestionController : ControllerBase
     {
         #region field
-        public readonly IQuestionService _questionService;
+        private readonly IQuestionService _questionService;
         #endregion
 
         #region Constructor
@@ -24,19 +27,19 @@ namespace OnlineTest.Controllers
         #region Methods
 
         [HttpGet]
-        public ActionResult<QuestionDTO> GetQuestion()
+        public ActionResult<GetQuestionDTO> GetQuestion()
         {
             return Ok(_questionService.GetQuestion());
         }
 
         [HttpPost]
-        public IActionResult AddQuestion(QuestionDTO question)
+        public IActionResult AddQuestion(AddQuestionDTO question)
         {
             return Ok(_questionService.AddQuestion(question));
         }
 
         [HttpPut]
-        public IActionResult UpdateQuestion(QuestionDTO question)
+        public IActionResult UpdateQuestion(UpdateQuestionDTO question)
         {
             return Ok(_questionService.UpdateQuestion(question));
         }

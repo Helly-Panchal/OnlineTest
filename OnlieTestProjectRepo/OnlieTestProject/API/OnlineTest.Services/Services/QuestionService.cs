@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using OnlineTest.Model;
 using OnlineTest.Model.Interfaces;
 using OnlineTest.Model.Repository;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.GetDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
 
 namespace OnlineTest.Services.Services
@@ -14,15 +18,17 @@ namespace OnlineTest.Services.Services
     public class QuestionService : IQuestionService
     {
         #region Fields
+        private readonly IMapper _mapper;
         private readonly IQuestionRepository _questionRepository;
         private readonly ITestRepository _testRepository;
         #endregion
 
         #region Constructor
-        public QuestionService(IQuestionRepository questionRepository, ITestRepository testRepository)
+        public QuestionService(IQuestionRepository questionRepository, ITestRepository testRepository, IMapper mapper)
         {
             _questionRepository = questionRepository;
             _testRepository = testRepository;
+            _mapper = mapper;
         }
         #endregion
 
@@ -33,18 +39,10 @@ namespace OnlineTest.Services.Services
             var response = new ResponseDTO();
             try
             {
-                var questions = _questionRepository.GetQuestion().Select(q => new QuestionDTO()
-                {
-                    Id = q.Id,
-                    QuestionName = q.QuestionName,
-                    Que = q.Que,
-                    Type = q.Type,
-                    Weightage = q.Weightage,
-                    SortOrder = q.SortOrder,
-                    TestId = q.TestId
-                }).ToList();
+                var result = _mapper.Map<List<GetQuestionDTO>>(_questionRepository.GetQuestion().ToList());
+
                 response.Status = 200;
-                response.Data = questions;
+                response.Data = result;
                 response.Message = "Ok";
             }
             catch (Exception ex)
@@ -55,7 +53,6 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
         public ResponseDTO GetQuestionById(int id)
         {
             var response = new ResponseDTO();
@@ -66,22 +63,14 @@ namespace OnlineTest.Services.Services
                 {
                     response.Status = 404;
                     response.Message = "Not Found";
-                    response.Error = "User not found";
+                    response.Error = "Question not found";
                     return response;
                 }
 
-                var result = new QuestionDTO()
-                {
-                    Id = questionById.Id,
-                    QuestionName = questionById.QuestionName,
-                    Que = questionById.Que,
-                    Type = questionById.Type,
-                    Weightage = questionById.Weightage,
-                    SortOrder = questionById.SortOrder,
-                    TestId = questionById.TestId
-                };
+                var result = _mapper.Map<GetQuestionDTO>(questionById);
+
                 response.Status = 200;
-                response.Data = questionById;
+                response.Data = result;
                 response.Message = "Ok";
             }
             catch (Exception ex)
@@ -92,8 +81,7 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
-        public ResponseDTO AddQuestion(QuestionDTO question)
+        public ResponseDTO AddQuestion(AddQuestionDTO question)
         {
             var response = new ResponseDTO();
             try
@@ -107,18 +95,8 @@ namespace OnlineTest.Services.Services
                     response.Error = "Test not found";
                     return response;
                 }
-                var addFlag = _questionRepository.AddQuestion(new Question
-                {
-                    QuestionName = question.QuestionName,
-                    Que = question.Que,
-                    Type = question.Type,
-                    Weightage = question.Weightage,
-                    SortOrder = question.SortOrder,
-                    IsActive = true,
-                    CreatedBy = question.CreatedBy,
-                    CreateOn = DateTime.UtcNow,
-                    TestId = question.TestId
-                });
+
+                var addFlag = _questionRepository.AddQuestion(_mapper.Map<Question>(question));
 
                 if (addFlag)
                 {
@@ -140,22 +118,12 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
-
-        public ResponseDTO UpdateQuestion(QuestionDTO question)
+        public ResponseDTO UpdateQuestion(UpdateQuestionDTO question)
         {
             var response = new ResponseDTO();
             try
             {
-                var updateFlag = _questionRepository.UpdateQuestion(new Question
-                {
-                    Id = question.Id,
-                    QuestionName = question.QuestionName,
-                    Que = question.Que,
-                    Weightage = question.Weightage,
-                    SortOrder = question.SortOrder,
-                    IsActive = question.IsActive
-                });
+                var updateFlag = _questionRepository.UpdateQuestion(_mapper.Map<Question>(question));
 
                 if (updateFlag)
                 {

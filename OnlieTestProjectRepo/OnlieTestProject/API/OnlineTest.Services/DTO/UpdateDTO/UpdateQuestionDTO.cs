@@ -7,6 +7,5 @@
         public string Que { get; set; }
         public int Weightage { get; set; }
         public int SortOrder { get; set; }
-        public bool IsActive { get; set; }
     }
 }

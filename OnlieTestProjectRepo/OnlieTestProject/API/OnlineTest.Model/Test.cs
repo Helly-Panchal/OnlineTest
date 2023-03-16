@@ -25,7 +25,6 @@ namespace OnlineTest.Model
         [ForeignKey("TechnologyNavigation")]
         public int TechnologyId { get; set; }   //fk
         public Technology TechnologyNavigation { get; set; }
-
-        public bool IsDelete { get; set; }    
+  
     }
 }

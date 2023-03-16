@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.GetDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
 using OnlineTest.Services.Services;
 
@@ -11,7 +15,7 @@ namespace OnlineTest.Controllers
     public class TechnologyController : ControllerBase
     {
         #region field
-        public readonly ITechnologyService _technologyService;
+        private readonly ITechnologyService _technologyService;
         #endregion
 
         #region Constructor
@@ -23,19 +27,19 @@ namespace OnlineTest.Controllers
 
         #region Methods
         [HttpGet]
-        public ActionResult<TechnologyDTO> GetTechnology(int PageNo, int RowsPerPage)
+        public ActionResult<GetTechnologyDTO> GetTechnology(int PageNo, int RowsPerPage)
         {
             return Ok(_technologyService.GetAllTechnologyUsingPagination(PageNo, RowsPerPage));
         }
 
         [HttpPost]
-        public IActionResult AddTechnology(TechnologyDTO technology)
+        public IActionResult AddTechnology(AddTechnologyDTO technology)
         {
             return Ok(_technologyService.AddTechnology(technology));
         }
 
         [HttpPut]
-        public IActionResult UpdateTechnology(TechnologyDTO technology)
+        public IActionResult UpdateTechnology(UpdateTechnologyDTO technology)
         {
             return Ok(_technologyService.UpdateTechnology(technology));
         }

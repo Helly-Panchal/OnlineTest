@@ -2,7 +2,7 @@
 
 namespace OnlineTest.Services.DTO.AddDTO
 {
-    public class AddtUserDTO
+    public class AddUserDTO
     {
         [Required(ErrorMessage = "Name is required. Please Enter Name")]
         [MaxLength(50, ErrorMessage = "Name can not be longer than 50 characters.")]

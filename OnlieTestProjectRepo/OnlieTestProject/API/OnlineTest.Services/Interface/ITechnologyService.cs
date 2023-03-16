@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using OnlineTest.Model;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 
 namespace OnlineTest.Services.Interface
 {
@@ -14,7 +16,7 @@ namespace OnlineTest.Services.Interface
         ResponseDTO GetAllTechnologyUsingPagination(int PageNo, int RowsPerPage);
         ResponseDTO GetTechnologyById(int id);
         ResponseDTO GetTechnologyByName(string name);
-        ResponseDTO AddTechnology(TechnologyDTO technology);
-        ResponseDTO UpdateTechnology(TechnologyDTO technology);
+        ResponseDTO AddTechnology(AddTechnologyDTO technology);
+        ResponseDTO UpdateTechnology(UpdateTechnologyDTO technology);
     }
 }

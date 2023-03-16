@@ -27,6 +27,5 @@ namespace OnlineTest.Services.DTO.UpdateDTO
         [Required(ErrorMessage = "Password is required")]
         [MaxLength(256)]
         public string Password { get; set; }
-        public bool IsActive { get; set; }
     }
 }

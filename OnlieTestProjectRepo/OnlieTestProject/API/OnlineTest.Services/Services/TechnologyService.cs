@@ -3,33 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using OnlineTest.Model;
 using OnlineTest.Model.Interfaces;
 using OnlineTest.Model.Repository;
 using OnlineTest.Services.DTO;
+using OnlineTest.Services.DTO.AddDTO;
+using OnlineTest.Services.DTO.GetDTO;
+using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
 
 namespace OnlineTest.Services.Services
 {
     public class TechnologyService : ITechnologyService
     {
+        #region Field
+        private readonly IMapper _mapper;
         private readonly ITechnologyRepository _technologyRepository;
+        #endregion
 
-        public TechnologyService(ITechnologyRepository technologyRepository)
+        #region Constructor
+        public TechnologyService(ITechnologyRepository technologyRepository, IMapper mapper)
         {
             _technologyRepository = technologyRepository;
+            _mapper = mapper;
         }
+        #endregion
 
         public ResponseDTO GetTechnology()
         {
             var response = new ResponseDTO();
             try
-            {
-                var technology = _technologyRepository.GetTechnology().Select(tech => new TechnologyDTO()
-                {
-                    Id = tech.Id,
-                    TechName = tech.TechName
-                }).ToList();
+            { 
+                var technology = _mapper.Map<List<TechnologyDTO>>(_technologyRepository.GetTechnology().ToList());
+
                 response.Status = 200;
                 response.Data = technology;
                 response.Message = "Ok";
@@ -42,17 +49,12 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
         public ResponseDTO GetAllTechnologyUsingPagination(int PageNo, int RowsPerPage)
         {
             var response = new ResponseDTO();
             try
             {
-                var technology = _technologyRepository.GetAllTechnologyUsingPagination(PageNo, RowsPerPage).Select(tech => new TechnologyDTO()
-                {
-                    Id = tech.Id,
-                    TechName = tech.TechName
-                }).ToList();
+                var technology = _mapper.Map<List<GetUserDTO>>(_technologyRepository.GetTechnology().ToList());
                 response.Status = 200;
                 response.Data = technology;
                 response.Message = "Ok";
@@ -65,7 +67,6 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
         public ResponseDTO GetTechnologyById(int id)
         {
             var response = new ResponseDTO();
@@ -80,11 +81,8 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var result = new TechnologyDTO()
-                {
-                    Id = technologyById.Id,
-                    TechName = technologyById.TechName
-                };
+                var result = _mapper.Map<TechnologyDTO>(technologyById);
+
                 response.Status = 200;
                 response.Data = result;
                 response.Message = "Ok";
@@ -97,7 +95,6 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
         public ResponseDTO GetTechnologyByName(string name)
         {
             var response = new ResponseDTO();
@@ -111,11 +108,9 @@ namespace OnlineTest.Services.Services
                     response.Error = "Technology not found";
                     return response;
                 }
-                var result = new TechnologyDTO()
-                {
-                    Id = technologyByName.Id,
-                    TechName = technologyByName.TechName
-                };
+
+                var result = _mapper.Map<TechnologyDTO>(technologyByName);
+
                 response.Status = 200;
                 response.Data = result;
                 response.Message = "Ok";
@@ -128,8 +123,7 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
-        public ResponseDTO AddTechnology(TechnologyDTO technology)
+        public ResponseDTO AddTechnology(AddTechnologyDTO technology)
         {
             var response = new ResponseDTO();
             try
@@ -142,13 +136,8 @@ namespace OnlineTest.Services.Services
                     response.Error = "Technology is already exists.";
                     return response;
                 }
-  
-                var addFlag = _technologyRepository.AddTechnology(new Technology
-                {
-                    TechName = technology.TechName,
-                    CreatedBy = technology.CreatedBy,
-                    CreatedOn = DateTime.UtcNow
-                });
+
+                var addFlag = _technologyRepository.AddTechnology(_mapper.Map<Technology>(technology));
 
                 if (addFlag)
                 {
@@ -170,8 +159,7 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
-        public ResponseDTO UpdateTechnology(TechnologyDTO technology)
+        public ResponseDTO UpdateTechnology(UpdateTechnologyDTO technology)
         {
             var response = new ResponseDTO();
             try
@@ -192,13 +180,9 @@ namespace OnlineTest.Services.Services
                     response.Error = "Technology already exists";
                     return response;
                 }
-                var updateFlag = _technologyRepository.UpdateTechnology(new Technology
-                {
-                    Id = technology.Id,
-                    TechName = technology.TechName,
-                    ModifiedBy = technology.ModifiedBy,
-                    ModifiedOn = DateTime.UtcNow
-                });
+                
+                var updateFlag = _technologyRepository.UpdateTechnology(_mapper.Map<Technology>(technology));
+
                 if (updateFlag)
                 {
                     response.Status = 204;
