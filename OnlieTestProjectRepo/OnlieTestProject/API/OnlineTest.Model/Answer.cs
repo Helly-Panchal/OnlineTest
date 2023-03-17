@@ -7,7 +7,7 @@ namespace OnlineTest.Model
     {
         [Key]
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Ans { get; set; }
         public int CreatedBy { set; get; }
 
         [Column(TypeName = "datetime")]

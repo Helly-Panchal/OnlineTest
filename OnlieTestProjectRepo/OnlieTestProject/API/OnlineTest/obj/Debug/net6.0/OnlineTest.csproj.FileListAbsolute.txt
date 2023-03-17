@@ -356,8 +356,8 @@ C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\Onli
 C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\OnlineTest\obj\Debug\net6.0\OnlineTest.AssemblyInfoInputs.cache
 C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\OnlineTest\obj\Debug\net6.0\OnlineTest.AssemblyInfo.cs
 C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\OnlineTest\obj\Debug\net6.0\OnlineTest.csproj.CoreCompileInputs.cache
-C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\OnlineTest\obj\Debug\net6.0\OnlineTest.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\OnlineTest\obj\Debug\net6.0\OnlineTest.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\OnlineTest\obj\Debug\net6.0\OnlineTest.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\OnlineTest\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\OnlineTest\bin\Debug\net6.0\appsettings.json
 C:\Users\HELLY\Desktop\New folder\OnlieTestProjectRepo\OnlieTestProject\API\OnlineTest\bin\Debug\net6.0\OnlineTest.exe

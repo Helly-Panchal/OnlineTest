@@ -31,8 +31,6 @@ namespace OnlineTest.Model.Repository
             _context.Entry("user").Property("Email");
             _context.Entry("user").Property("Name");
             _context.Entry("user").Property("MobileNo");
-            _context.Entry("user").Property("Password");
-            _context.Entry("user").Property("IsActive");
 
             return _context.SaveChanges() > 0;
         }

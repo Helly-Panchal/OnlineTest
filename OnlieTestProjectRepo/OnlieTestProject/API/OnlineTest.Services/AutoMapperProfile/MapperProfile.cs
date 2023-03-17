@@ -33,6 +33,12 @@ namespace OnlineTest.Services.AutoMapperProfile
             CreateMap<AddQuestionDTO, Question>();
             CreateMap<UpdateQuestionDTO, Question>();
             #endregion
+
+            #region Answer
+            CreateMap<Answer, GetAnswerDTO>();
+            CreateMap<AddAnswerDTO, Answer>();
+            CreateMap<UpdateAnswerDTO, Answer>();
+            #endregion
         }
 
     }

@@ -92,6 +92,43 @@ namespace OnlineTest.Model.Migrations
                     b.ToTable("Questions");
                 });
 
+            modelBuilder.Entity("OnlineTest.Model.QuestionAnswerMap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnswerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnswerId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("TestId");
+
+                    b.ToTable("QuestionAnswerMapping");
+                });
+
             modelBuilder.Entity("OnlineTest.Model.RToken", b =>
                 {
                     b.Property<int>("Id")
@@ -100,7 +137,7 @@ namespace OnlineTest.Model.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedOn")
                         .HasColumnType("DateTime")
                         .HasColumnName("Created_Date");
 
@@ -156,6 +193,9 @@ namespace OnlineTest.Model.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("DateTime");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
@@ -192,6 +232,9 @@ namespace OnlineTest.Model.Migrations
 
                     b.Property<DateTime?>("ExpireOn")
                         .HasColumnType("DateTime");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<int>("TechnologyId")
                         .HasColumnType("int");
@@ -269,6 +312,33 @@ namespace OnlineTest.Model.Migrations
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("TestNavigation");
+                });
+
+            modelBuilder.Entity("OnlineTest.Model.QuestionAnswerMap", b =>
+                {
+                    b.HasOne("OnlineTest.Model.Answer", "AnswerNavigation")
+                        .WithMany()
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("OnlineTest.Model.Question", "QuestionNavigation")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("OnlineTest.Model.Test", "TestNavigation")
+                        .WithMany()
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AnswerNavigation");
+
+                    b.Navigation("QuestionNavigation");
 
                     b.Navigation("TestNavigation");
                 });

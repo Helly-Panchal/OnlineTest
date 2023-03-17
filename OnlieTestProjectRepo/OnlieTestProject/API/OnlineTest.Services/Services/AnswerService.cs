@@ -106,7 +106,7 @@ namespace OnlineTest.Services.Services
             var response = new ResponseDTO();
             try
             {
-                var updateFlag = _answerRepository.AddAnswer(_mapper.Map<Answer>(answer));
+                var updateFlag = _answerRepository.UpdateAnswer(_mapper.Map<Answer>(answer));
 
                 if (updateFlag)
                 {

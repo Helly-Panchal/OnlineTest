@@ -26,7 +26,8 @@ namespace OnlineTest.Model.Repository
 
         public bool UpdateAnswer(Answer answer)
         {
-            _context.Answers.Update(answer);
+            //_context.Answers.Update(answer);
+            _context.Entry(answer).Property("Ans").IsModified = true;
             return _context.SaveChanges() > 0;
         }
     }

@@ -6,11 +6,11 @@ namespace OnlineTest.Services.DTO.AddDTO
     {
 
         [Required(ErrorMessage = "Technology name is required. Please Enter Name")]
-        [MaxLength(50, ErrorMessage = "Technology name can not be longer than 50 characters.")]
+        [MaxLength(20, ErrorMessage = "Technology name can not be longer than {1} characters.")]
         public string TechName { get; set; }
 
-        [Required(ErrorMessage = "This field is required")]
         public int CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public bool IsActive { get; set; } = true;
     }
 }

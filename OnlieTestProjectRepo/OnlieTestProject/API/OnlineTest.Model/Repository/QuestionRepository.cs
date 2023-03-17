@@ -38,7 +38,6 @@ namespace OnlineTest.Model.Repository
             _context.Entry(question).Property("Type").IsModified = true;
             _context.Entry(question).Property("Weightage").IsModified = true;
             _context.Entry(question).Property("SortOrder").IsModified = true;
-            _context.Entry(question).Property("IsActive").IsModified = true;
 
             return _context.SaveChanges() > 0;
         }

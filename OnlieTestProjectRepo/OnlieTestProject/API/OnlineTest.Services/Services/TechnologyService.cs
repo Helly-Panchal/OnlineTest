@@ -35,7 +35,7 @@ namespace OnlineTest.Services.Services
             var response = new ResponseDTO();
             try
             { 
-                var technology = _mapper.Map<List<TechnologyDTO>>(_technologyRepository.GetTechnology().ToList());
+                var technology = _mapper.Map<List<GetTechnologyDTO>>(_technologyRepository.GetTechnology().ToList());
 
                 response.Status = 200;
                 response.Data = technology;
@@ -81,7 +81,7 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var result = _mapper.Map<TechnologyDTO>(technologyById);
+                var result = _mapper.Map<GetTechnologyDTO>(technologyById);
 
                 response.Status = 200;
                 response.Data = result;
@@ -109,7 +109,7 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var result = _mapper.Map<TechnologyDTO>(technologyByName);
+                var result = _mapper.Map<GetTechnologyDTO>(technologyByName);
 
                 response.Status = 200;
                 response.Data = result;

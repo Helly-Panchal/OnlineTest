@@ -75,7 +75,7 @@ namespace OnlineTest.Controllers
                 RefreshToken = refreshToken,
                 IsStop = 0,
                 UserId = sessionModel.Id,
-                CreatedDate = DateTime.Now
+                CreatedOn = DateTime.Now
             };
 
             //store the refresh_token
@@ -113,7 +113,7 @@ namespace OnlineTest.Controllers
             {
                 RefreshToken = refreshToken,
                 IsStop = 0,
-                CreatedDate = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
                 UserId = token.UserId
             });
 

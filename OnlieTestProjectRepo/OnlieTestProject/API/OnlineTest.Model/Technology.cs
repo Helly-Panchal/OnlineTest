@@ -29,5 +29,7 @@ namespace OnlineTest.Model
 
         [Column(TypeName = "DateTime")]
         public DateTime? ModifiedOn { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

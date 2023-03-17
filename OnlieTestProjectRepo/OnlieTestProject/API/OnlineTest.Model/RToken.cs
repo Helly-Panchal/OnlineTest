@@ -21,7 +21,7 @@ namespace OnlineTest.Model
         public int IsStop { get; set; }
 
         [Column("Created_Date", TypeName = "DateTime")]
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         [Column("User_Id")]
         public int UserId { get; set; }

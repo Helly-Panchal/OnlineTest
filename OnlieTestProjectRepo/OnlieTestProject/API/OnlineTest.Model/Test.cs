@@ -10,6 +10,12 @@ namespace OnlineTest.Model
     public class Test
     {
         public int Id { get; set; }
+
+
+        [ForeignKey("TechnologyNavigation")]
+        public int TechnologyId { get; set; }   //fk
+        public Technology TechnologyNavigation { get; set; }
+
         public string TestName { get; set; }
         public string Description { get; set; }
 
@@ -21,10 +27,7 @@ namespace OnlineTest.Model
         [Column(TypeName = "DateTime")]
         public DateTime? ExpireOn { get; set; }
 
-
-        [ForeignKey("TechnologyNavigation")]
-        public int TechnologyId { get; set; }   //fk
-        public Technology TechnologyNavigation { get; set; }
+        public bool IsActive { get; set; }
   
     }
 }
