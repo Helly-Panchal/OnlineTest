@@ -1,34 +1,30 @@
 ﻿using AutoMapper;
-using Azure;
-using Microsoft.EntityFrameworkCore.Query;
 using OnlineTest.Model;
 using OnlineTest.Model.Interfaces;
-using OnlineTest.Model.Repository;
 using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
 using OnlineTest.Services.DTO.GetDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineTest.Services.Services
 {
     public class UserService : IUserService
     {
         #region Fields
+        private readonly IHasherService _hasherService;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
         #endregion
 
         #region Constructors
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IUserRoleRepository userRoleRepository ,IMapper mapper, IHasherService hasherService)
         {
             _userRepository = userRepository;
+            _userRoleRepository = userRoleRepository;
             _mapper = mapper;
+            _hasherService = hasherService;
         }
         #endregion
 
@@ -38,11 +34,11 @@ namespace OnlineTest.Services.Services
             var response = new ResponseDTO();
             try
             {
-                var users = _mapper.Map<List<GetUserDTO>>(_userRepository.GetUsers().ToList());
+                var result = _mapper.Map<List<GetUserDTO>>(_userRepository.GetUsers().ToList());
 
                 response.Status = 200;
-                response.Data = users;
                 response.Message = "Ok";
+                response.Data = result;
             }
             catch (Exception ex)
             {
@@ -57,11 +53,11 @@ namespace OnlineTest.Services.Services
             var response = new ResponseDTO();
             try
             {
-                var users = _mapper.Map<List<GetUserDTO>>(_userRepository.GetUsersUsingPagination(PageNo, RowsPerPage).ToList());
+                var result = _mapper.Map<List<GetUserDTO>>(_userRepository.GetUsersUsingPagination(PageNo, RowsPerPage).ToList());
 
                 response.Status = 200;
-                response.Data = users;
                 response.Message = "Ok";
+                response.Data = result;
             }
             catch (Exception ex)
             {
@@ -88,8 +84,8 @@ namespace OnlineTest.Services.Services
                 var result = _mapper.Map<GetUserDTO>(userByEmail);
 
                 response.Status = 200;
-                response.Data = result;
                 response.Message = "Ok";
+                response.Data = result;
             }
             catch (Exception ex)
             {
@@ -141,19 +137,36 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var addFlag = _userRepository.AddUser(_mapper.Map<User>(user));
-
-                if (addFlag)
-                {
-                    response.Status = 204;
-                    response.Message = "Created";
-                }
-                else
+                user.Password = _hasherService.Hash(user.Password);
+                var userId = _userRepository.AddUser(_mapper.Map<User>(user));
+                if(userId == 0)
                 {
                     response.Status = 400;
                     response.Message = "Not Created";
                     response.Error = "User is not added";
+                    return response;
                 }
+                if (user.IsAdmin)
+                {
+                    var roleAdmin = new UserRole
+                    {
+                        UserId = userId,
+                        RoleId = 1
+                    };
+                    _userRoleRepository.AddRole(roleAdmin);
+                }
+                else
+                {
+                    var roleUser = new UserRole
+                    {
+                        UserId = userId,
+                        RoleId = 2
+                    };
+                    _userRoleRepository.AddRole(roleUser);
+                }
+                response.Status = 201;
+                response.Message = "Created";
+                response.Data = userId;
             }
             catch (Exception ex)
             {
@@ -208,12 +221,12 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-        public ResponseDTO DeleteUser(int Id)
+        public ResponseDTO DeleteUser(int id)
         {
             var response = new ResponseDTO();
             try
             {
-                var userById = GetUserById(Id);
+                var userById = _userRepository.GetUserById(id);
                 if (userById == null)
                 {
                     response.Status = 404;
@@ -221,7 +234,9 @@ namespace OnlineTest.Services.Services
                     response.Error = "User not found.";
                     return response;
                 }
-                var deleteFlag = _userRepository.DeleteUser(Id);
+
+                userById.IsActive = false;
+                var deleteFlag = _userRepository.DeleteUser(userById);
                 if (deleteFlag)
                 {
                     response.Status = 200;
@@ -245,8 +260,10 @@ namespace OnlineTest.Services.Services
         public GetUserDTO IsUserExists(TokenDTO user)
         {
             var result = _userRepository.GetUserByEmail(user.Username);
-            if (result == null || result.Password != user.Password)
+            if (result == null || result.Password != _hasherService.Hash(user.Password))
+            {
                 return null;
+            }
             return _mapper.Map<GetUserDTO>(result);
         }
         #endregion

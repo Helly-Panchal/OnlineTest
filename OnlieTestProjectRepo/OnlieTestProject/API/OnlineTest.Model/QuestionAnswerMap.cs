@@ -29,5 +29,6 @@ namespace OnlineTest.Model
         public DateTime CreateOn { set; get; }
 
         public bool IsActive { get; set; }
+        //public bool IsAnswer { get; set; }
     }
 }

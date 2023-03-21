@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using OnlineTest.Model;
 using OnlineTest.Model.Interfaces;
 using OnlineTest.Services.DTO.AddDTO;
-using OnlineTest.Services.DTO.GetDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
-using OnlineTest.Services.Services;
 
 namespace OnlineTest.Controllers
 {
@@ -14,7 +12,7 @@ namespace OnlineTest.Controllers
     public class AnswerController : ControllerBase
     {
         #region Fields
-        public readonly IAnswerService _answerService;
+        private readonly IAnswerService _answerService;
         #endregion
 
         #region Constructor
@@ -26,7 +24,7 @@ namespace OnlineTest.Controllers
 
         #region Methods
         [HttpGet]
-        public ActionResult<GetAnswerDTO> GetAnswer()
+        public IActionResult GetAnswer()
         {
             return Ok(_answerService.GetAnswer());
         }
@@ -41,6 +39,12 @@ namespace OnlineTest.Controllers
         public IActionResult UpdateAnswer(UpdateAnswerDTO answer)
         {
             return Ok(_answerService.UpdateAnswer(answer));
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteAnswer(int id)
+        {
+            return Ok(_answerService.DeleteAnswer(id));
         }
         #endregion
     }

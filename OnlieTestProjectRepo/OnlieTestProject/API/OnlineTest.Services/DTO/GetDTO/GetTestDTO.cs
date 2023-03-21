@@ -7,6 +7,6 @@
         public string TestName { get; set; }
         public string Description { get; set; }
         public DateTime? ExpireOn { get; set; }
- 
+        public List<GetQuestionDTO>? Questions { get; set; }
     }
 }

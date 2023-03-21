@@ -23,5 +23,7 @@ namespace OnlineTest.Services.DTO.AddDTO
         public string Password { get; set; }
 
         public bool IsActive { get; set; } = true;
+        [Required]
+        public bool IsAdmin { get; set; }
     }
 }

@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using OnlineTest.Model;
 using OnlineTest.Model.Interfaces;
-using OnlineTest.Model.Repository;
 using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
 using OnlineTest.Services.DTO.GetDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineTest.Services.Services
 {
@@ -22,13 +15,17 @@ namespace OnlineTest.Services.Services
         private readonly IMapper _mapper;
         private readonly ITestRepository _testRepository;
         private readonly ITechnologyRepository _technologyRepository;
+        private readonly IQuestionRepository _questionRepository;
+        private readonly IAnswerRepository _answerRepository;
         #endregion
 
         #region Constructor
-        public TestService(ITestRepository testRepository, ITechnologyRepository technologyRepository, IMapper mapper)
+        public TestService(ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository,IAnswerRepository answerRepository ,IMapper mapper)
         {
             _testRepository = testRepository;
             _technologyRepository = technologyRepository;
+            _questionRepository = questionRepository;
+            _answerRepository = answerRepository;
             _mapper = mapper;
         }
         #endregion
@@ -40,7 +37,6 @@ namespace OnlineTest.Services.Services
             try
             {
                 var result = _mapper.Map<List<GetTestDTO>>(_testRepository.GetTest().ToList());
-
                 response.Status = 200;
                 response.Data = result;
                 response.Message = "Ok";
@@ -86,7 +82,15 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var result = _mapper.Map<List<GetTestDTO>>(testById);
+                var result = _mapper.Map<GetTestDTO>(testById);
+
+                var questionsList = _mapper.Map<List<GetQuestionDTO>>(_questionRepository.GetQuestionByTestId(testById.Id).ToList());
+                foreach(var question in questionsList)
+                {
+                    var answerList = _mapper.Map<List<GetAnswerDTO>>(_answerRepository.GetAnswerByQuestionId(question.Id).ToList());
+                    question.Answers = answerList;
+                }
+                result.Questions = questionsList;
 
                 response.Status = 200;
                 response.Data = result;
@@ -100,12 +104,38 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
+        public ResponseDTO GetTestByTechnologyId(int technologyId)
+        {
+            var response = new ResponseDTO();
+            try
+            {
+                var technologyById = _technologyRepository.GetTechnologyById(technologyId);
+                if (technologyById == null)
+                {
+                    response.Status = 404;
+                    response.Message = "Not Found";
+                    response.Error = "Technology not found";
+                    return response;
+                }
+
+                var result = _mapper.Map<List<GetTestDTO>>(_testRepository.GetTestsByTechnologyId(technologyId).ToList());
+                response.Status = 200;
+                response.Message = "Ok";
+                response.Data = result;
+            }
+            catch(Exception ex)
+            {
+                response.Status = 500;
+                response.Message = "Internal Server Error";
+                response.Error = ex.Message;
+            }
+            return response;
+        }
         public ResponseDTO AddTest(AddTestDTO test)
         {
             var response = new ResponseDTO();
             try
             {
-                //check technology is exists or not for which test is added.
                 var technologyById = _technologyRepository.GetTechnologyById(test.TechnologyId);
                 if (technologyById == null)
                 {
@@ -115,19 +145,17 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var addFlag = _testRepository.AddTest(_mapper.Map<Test>(test));
-
-                if (addFlag)
-                {
-                    response.Status = 204;
-                    response.Message = "Created";
-                }
-                else
+                var testId = _testRepository.AddTest(_mapper.Map<Test>(test));
+                if(testId == 0)
                 {
                     response.Status = 400;
                     response.Message = "Not Created";
-                    response.Error = "Test is not added";
+                    response.Error = "Could not add test";
+                    return response;
                 }
+                response.Status = 201;
+                response.Message = "Created";
+                response.Data = testId;
             }
             catch (Exception ex)
             {
@@ -142,6 +170,14 @@ namespace OnlineTest.Services.Services
             var response = new ResponseDTO();
             try
             {
+                var testById = _testRepository.GetTestById(test.Id);
+                if (testById == null)
+                {
+                    response.Status = 404;
+                    response.Message = "Not Found";
+                    response.Error = "Test not found";
+                    return response;
+                }
                 var updateFlag = _testRepository.UpdateTest(_mapper.Map<Test>(test));
 
                 if (updateFlag)
@@ -165,7 +201,42 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-        #endregion
+        public ResponseDTO DeleteTest(int id)
+        {
+            var response = new ResponseDTO();
+            try
+            {
+                var testById = _testRepository.GetTestById(id);
+                if (testById == null)
+                {
+                    response.Status = 404;
+                    response.Message = "Not Found";
+                    response.Error = "Test not found";
+                    return response;
+                }
+                testById.IsActive = false;
+                var deleteFlag = _testRepository.DeleteTest(_mapper.Map<Test>(testById));
+                if (deleteFlag)
+                {
+                    response.Status = 204;
+                    response.Message = "Deleted Successfully";
+                }
+                else
+                {
+                    response.Status = 400;
+                    response.Message = "Not Deleted";
+                    response.Error = "Test is not deleted";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Status = 500;
+                response.Message = "Internal Server Error";
+                response.Error = ex.Message;
+            }
+            return response;
 
+        }
+        #endregion
     }
 }

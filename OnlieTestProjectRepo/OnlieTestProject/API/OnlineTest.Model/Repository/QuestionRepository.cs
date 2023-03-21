@@ -1,46 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OnlineTest.Model.Interfaces;
+﻿using OnlineTest.Model.Interfaces;
 
 namespace OnlineTest.Model.Repository
 {
     public class QuestionRepository : IQuestionRepository
     {
+        #region Fields
         private readonly OnlineTestContext _context;
+        #endregion
+
+        #region Constructor
         public QuestionRepository(OnlineTestContext context)
         {
             _context = context;
         }
-        public IEnumerable<Question> GetQuestion()
+        #endregion
+
+        #region Methods
+        public IEnumerable<Question> GetQuestionByTestId(int testId)
         {
-            return _context.Questions.ToList();
+            return _context.Questions.Where(q => q.TestId == testId && q.IsActive == true).ToList();
         }
 
         public Question GetQuestionById(int id)
         {
-            return _context.Questions.FirstOrDefault(x => x.Id == id);
+            return _context.Questions.FirstOrDefault(q => q.Id == id && q.IsActive == true);
         }
 
-        public bool AddQuestion(Question question)
+        public int AddQuestion(Question question)
         {
-            _context.Questions.Add(question);
-            return _context.SaveChanges() > 0;
+            _context.Add(question);
+            if(_context.SaveChanges() > 0)
+            {
+                return question.Id;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public bool UpdateQuestion(Question question)
         {
-            //_context.Questions.Update(question);
             _context.Entry(question).Property("QuestionName").IsModified = true;
             _context.Entry(question).Property("Que").IsModified = true;
-            _context.Entry(question).Property("Type").IsModified = true;
             _context.Entry(question).Property("Weightage").IsModified = true;
             _context.Entry(question).Property("SortOrder").IsModified = true;
-
             return _context.SaveChanges() > 0;
         }
 
+        public bool DeleteQuestion(Question question)
+        {
+            _context.Entry(question).Property("IsActive").IsModified = true;
+            return _context.SaveChanges() > 0;
+        }
+
+        public bool IsQuestionExists(int testId, string que)
+        {
+            var result = _context.Questions.Where(q => q.TestId == testId && q.Que == que && q.IsActive == true);
+            if(result != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
     }
 }

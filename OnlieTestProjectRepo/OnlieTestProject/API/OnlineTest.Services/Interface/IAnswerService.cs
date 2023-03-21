@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Update.Internal;
-using OnlineTest.Model;
-using OnlineTest.Services.DTO;
+﻿using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 
@@ -12,5 +10,7 @@ namespace OnlineTest.Services.Interface
         ResponseDTO GetAnswerById(int id);
         ResponseDTO AddAnswer(AddAnswerDTO answer);
         ResponseDTO UpdateAnswer(UpdateAnswerDTO answer);
+        ResponseDTO DeleteAnswer(int id);
+
     }
 }

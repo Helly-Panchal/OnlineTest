@@ -9,5 +9,6 @@
         public int Type { get; set; }
         public int Weightage { get; set; }
         public int SortOrder { get; set; }
+        public List<GetAnswerDTO> Answers { get; set; }
     }
 }

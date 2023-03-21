@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Castle.MicroKernel.SubSystems.Conversion;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineTest.Services.DTO.AddDTO
 {
@@ -31,7 +33,7 @@ namespace OnlineTest.Services.DTO.AddDTO
 
         public int CreatedBy { set; get; }
 
-        public DateTime CreatedOn { set; get; } = DateTime.UtcNow;
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
 
     }

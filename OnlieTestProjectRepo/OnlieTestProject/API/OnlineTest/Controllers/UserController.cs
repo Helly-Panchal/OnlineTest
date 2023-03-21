@@ -1,19 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OnlineTest.Model;
-using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
-using OnlineTest.Services.DTO.GetDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
-using Xamarin.Essentials;
-
 namespace OnlineTest.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region field
@@ -30,9 +24,21 @@ namespace OnlineTest.Controllers
         #region Methods
 
         [HttpGet]
-        public ActionResult<GetUserDTO> GetUsers(int PageNo, int RowsPerPage)
+        public IActionResult GetUsers()
+        {
+            return Ok(_userService.GetUsers());
+        }
+
+        [HttpGet("paginated")]
+        public IActionResult GetUsersUsingPagination(int PageNo, int RowsPerPage)
         {
             return Ok(_userService.GetUsersUsingPagination(PageNo, RowsPerPage));
+        }
+
+        [HttpGet("id")]
+        public IActionResult GetUserById(int id)
+        {
+            return Ok(_userService.GetUserById(id));
         }
 
         [HttpPost]
@@ -49,9 +55,9 @@ namespace OnlineTest.Controllers
 
 
         [HttpDelete]
-        public IActionResult DeleteUser(int Id)
+        public IActionResult DeleteUser(int id)
         {
-            return Ok(_userService.DeleteUser(Id));
+            return Ok(_userService.DeleteUser(id));
         }
         #endregion
     }

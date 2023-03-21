@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using OnlineTest.Model;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
-using OnlineTest.Services.DTO.GetDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
 
@@ -27,9 +24,15 @@ namespace OnlineTest.Controllers
         #region Methods
 
         [HttpGet]
-        public ActionResult<GetQuestionDTO> GetQuestion()
+        public IActionResult GetQuestionByTestId(int id)
         {
-            return Ok(_questionService.GetQuestion());
+            return Ok(_questionService.GetQuestionByTestId(id));
+        }
+
+        [HttpGet("id")]
+        public IActionResult GetQuestionById(int id)
+        {
+            return Ok(_questionService.GetQuestionById(id));
         }
 
         [HttpPost]
@@ -43,6 +46,12 @@ namespace OnlineTest.Controllers
         {
             return Ok(_questionService.UpdateQuestion(question));
         }
-    #endregion
+
+        [HttpDelete]
+        public IActionResult DeleteQuestion(int id)
+        {
+            return Ok(_questionService.DeleteQuestion(id));
+        }
+        #endregion
     }
 }

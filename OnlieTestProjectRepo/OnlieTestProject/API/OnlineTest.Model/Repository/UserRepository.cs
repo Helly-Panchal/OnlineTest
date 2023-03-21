@@ -1,63 +1,62 @@
 ﻿using OnlineTest.Model.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineTest.Model.Repository
 {
     public class UserRepository : IUserRepository
     {
+        #region Fields
         private readonly OnlineTestContext _context;
+        #endregion
+
+        #region Constructor
         public UserRepository(OnlineTestContext context)
         {
             _context = context;
         }
+        #endregion
 
+        #region Methods
         public IEnumerable<User> GetUsers()
         {
-            return _context.Users.ToList();
+            return _context.Users.Where(u => u.IsActive == true).ToList();
         }
-
-        public bool AddUser(User user)
-        {
-            _context.Users.Add(user);
-            return _context.SaveChanges() > 0;
-        }
-
-        public bool UpdateUser(User user)
-        {
-            _context.Entry("user").Property("Email");
-            _context.Entry("user").Property("Name");
-            _context.Entry("user").Property("MobileNo");
-
-            return _context.SaveChanges() > 0;
-        }
-
-        public bool DeleteUser(int id)
-        {
-            var del = _context.Users.Find(id);
-            if (del != null)
-            {
-                _context.Users.Remove(del);
-            }
-            return _context.SaveChanges() > 0;
-        }
-
         public User GetUserById(int id)
         {
-            return _context.Users.FirstOrDefault(x => x.Id == id);
+            return _context.Users.FirstOrDefault(u => u.Id == id && u.IsActive == true);
         }
-
         public User GetUserByEmail(string email)
         {
-            return _context.Users.FirstOrDefault(x => x.Email == email);
+            return _context.Users.FirstOrDefault(u => u.Email == email && u.IsActive == true);
         }
-
         public IEnumerable<User> GetUsersUsingPagination(int PageNo, int RowsPerPage)
         {
-            return _context.Users.Skip((PageNo - 1) * RowsPerPage).Take(RowsPerPage).ToList();
+            return _context.Users.Where(u => u.IsActive == true).Skip((PageNo - 1) * RowsPerPage).Take(RowsPerPage).ToList();
         }
+        public int AddUser(User user)
+        {
+            _context.Users.Add(user);
+            if(_context.SaveChanges() > 0)
+            {
+                return user.Id;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public bool UpdateUser(User user)
+        {
+            _context.Entry(user).Property("Email").IsModified = true;
+            _context.Entry(user).Property("Name").IsModified = true;
+            _context.Entry(user).Property("MobileNo").IsModified = true;
+
+            return _context.SaveChanges() > 0;
+        }
+        public bool DeleteUser(User user)
+        {
+            _context.Entry(user).Property("IsActive").IsModified = true;
+            return _context.SaveChanges() > 0;
+        }
+        #endregion
     }
 }

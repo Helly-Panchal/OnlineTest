@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OnlineTest.Model.Interfaces
+﻿namespace OnlineTest.Model.Interfaces
 {
     public interface ITechnologyRepository
     {
@@ -12,7 +6,8 @@ namespace OnlineTest.Model.Interfaces
         IEnumerable<Technology> GetAllTechnologyUsingPagination(int PageNo, int RowsPerPage);
         Technology GetTechnologyById (int id);
         Technology GetTechnologyByName(string name);
-        bool AddTechnology(Technology technology);
+        int AddTechnology(Technology technology);
         bool UpdateTechnology(Technology technology);   
+        bool DeleteTechnology(Technology technology);
     }
 }

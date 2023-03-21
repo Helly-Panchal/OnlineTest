@@ -30,15 +30,15 @@ namespace OnlineTest.Services.Services
         }
         #endregion
 
+        #region Methods
         public ResponseDTO GetTechnology()
         {
             var response = new ResponseDTO();
             try
             { 
-                var technology = _mapper.Map<List<GetTechnologyDTO>>(_technologyRepository.GetTechnology().ToList());
-
+                var result = _mapper.Map<List<GetTechnologyDTO>>(_technologyRepository.GetTechnology().ToList());
                 response.Status = 200;
-                response.Data = technology;
+                response.Data = result;
                 response.Message = "Ok";
             }
             catch (Exception ex)
@@ -54,9 +54,9 @@ namespace OnlineTest.Services.Services
             var response = new ResponseDTO();
             try
             {
-                var technology = _mapper.Map<List<GetUserDTO>>(_technologyRepository.GetTechnology().ToList());
+                var result = _mapper.Map<List<GetTechnologyDTO>>(_technologyRepository.GetAllTechnologyUsingPagination(PageNo,RowsPerPage).ToList());
                 response.Status = 200;
-                response.Data = technology;
+                response.Data = result;
                 response.Message = "Ok";
             }
             catch (Exception ex)
@@ -84,8 +84,8 @@ namespace OnlineTest.Services.Services
                 var result = _mapper.Map<GetTechnologyDTO>(technologyById);
 
                 response.Status = 200;
-                response.Data = result;
                 response.Message = "Ok";
+                response.Data = result;              
             }
             catch (Exception ex)
             {
@@ -137,19 +137,18 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var addFlag = _technologyRepository.AddTechnology(_mapper.Map<Technology>(technology));
+                var technologyId = _technologyRepository.AddTechnology(_mapper.Map<Technology>(technology));
 
-                if (addFlag)
-                {
-                    response.Status = 204;
-                    response.Message = "Created";
-                }
-                else
+                if (technologyId == 0)
                 {
                     response.Status = 400;
                     response.Message = "Not Created";
                     response.Error = "Technology is not added";
+                    return response;
                 }
+                response.Status = 201;
+                response.Message = "Created";
+                response.Data = technologyId;
             }
             catch (Exception ex)
             {
@@ -180,7 +179,8 @@ namespace OnlineTest.Services.Services
                     response.Error = "Technology already exists";
                     return response;
                 }
-                
+
+                //technology.ModifiedOn = DateTime.UtcNow;
                 var updateFlag = _technologyRepository.UpdateTechnology(_mapper.Map<Technology>(technology));
 
                 if (updateFlag)
@@ -203,5 +203,41 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
+        public ResponseDTO DeleteTechnology(int id)
+        {
+            var response = new ResponseDTO();
+            try
+            {
+                var technologyById = _technologyRepository.GetTechnologyById(id);
+                if (technologyById == null)
+                {
+                    response.Status = 400;
+                    response.Message = "Not Deleted";
+                    response.Error = "Technology does not exist";
+                    return response;
+                }
+                technologyById.IsActive = false;
+                var deleteFlag = _technologyRepository.DeleteTechnology(_mapper.Map<Technology>(technologyById));
+                if (deleteFlag)
+                {
+                    response.Status = 204;
+                    response.Message = "Deleted";
+                }
+                else
+                {
+                    response.Status = 400;
+                    response.Message = "Not Deleted";
+                    response.Error = "Could not delete technology";
+                }
+            }
+            catch(Exception ex)
+            {
+                response.Status = 500;
+                response.Message = "Internal Server Error";
+                response.Error = ex.Message;
+            }
+            return response;
+        }
+        #endregion
     }
 }

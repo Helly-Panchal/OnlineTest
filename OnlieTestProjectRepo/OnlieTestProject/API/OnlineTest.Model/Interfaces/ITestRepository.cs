@@ -11,7 +11,9 @@ namespace OnlineTest.Model.Interfaces
         IEnumerable<Test> GetTest();
         IEnumerable<Test> GetTestUsingPagination(int PageNo, int RowsPerPage);
         Test GetTestById(int id);
-        bool AddTest(Test test);
+        IEnumerable<Test> GetTestsByTechnologyId(int technologyId);
+        int AddTest(Test test);
         bool UpdateTest(Test test);
+        bool DeleteTest(Test test);
     }
 }

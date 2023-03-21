@@ -14,7 +14,9 @@ namespace OnlineTest.Services.Interface
         ResponseDTO GetTest();
         ResponseDTO GetTestUsingPagination(int PageNo, int RowsPerPage);
         ResponseDTO GetTestById(int id);
+        ResponseDTO GetTestByTechnologyId(int technologyId);
         ResponseDTO AddTest(AddTestDTO test);
         ResponseDTO UpdateTest(UpdateTestDTO test);
+        ResponseDTO DeleteTest(int id);
     }
 }

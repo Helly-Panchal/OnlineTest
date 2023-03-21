@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
-using OnlineTest.Services.DTO.GetDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
-using OnlineTest.Services.Services;
 
 namespace OnlineTest.Controllers
 {
@@ -26,9 +23,21 @@ namespace OnlineTest.Controllers
 
         #region Methods
         [HttpGet]
-        public ActionResult<GetTestDTO> GetTest(int PageNo, int RowsPerPage)
+        public IActionResult GetTestByTechnologyId(int id)
         {
-            return Ok(_testService.GetTestUsingPagination(PageNo, RowsPerPage));
+            return Ok(_testService.GetTestByTechnologyId(id));
+        }
+
+        [HttpGet("paginated")]
+        public IActionResult GetTestUsingPagination(int PageNumber, int RowsPerPage)
+        {
+            return Ok(_testService.GetTestUsingPagination(PageNumber, RowsPerPage));
+        }
+
+        [HttpGet("id")]
+        public IActionResult GetTestById(int id)
+        {
+            return Ok(_testService.GetTestById(id));
         }
 
         [HttpPost]
@@ -40,9 +49,14 @@ namespace OnlineTest.Controllers
         [HttpPut]
         public IActionResult UpdateTest(UpdateTestDTO test)
         {
-            return Ok(_testService.UpdateTest);
+            return Ok(_testService.UpdateTest(test));
         }
 
+        [HttpDelete]
+        public IActionResult DeleteTest(int id)
+        {
+            return Ok(_testService.DeleteTest(id));
+        }
         #endregion
     }
 }

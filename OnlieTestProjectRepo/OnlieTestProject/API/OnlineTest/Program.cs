@@ -25,8 +25,12 @@ builder.Services.AddDbContext<OnlineTestContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SQLAuth"), b => b.MigrationsAssembly("OnlineTest.Model"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
+
+#region DependencyInjection
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+
 builder.Services.Configure<JWTConfigDTO>(builder.Configuration.GetSection("JWTConfig"));
 builder.Services.AddScoped<IRTokenRepository, RTokenRepository>();
 builder.Services.AddScoped<IRTokenService, RTokenService>();
@@ -42,6 +46,12 @@ builder.Services.AddScoped<IQuestionService, QuestionService>();
 
 builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
 builder.Services.AddScoped<IAnswerService, AnswerService>();
+
+builder.Services.AddScoped<IHasherService, HasherService>();
+
+builder.Services.AddScoped<IQuestionAnswerMapRepository, QuestionAnswerMapRepository>();
+
+#endregion
 
 builder.Services.AddSwaggerGen(c =>
 {

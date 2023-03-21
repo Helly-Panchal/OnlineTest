@@ -5,9 +5,8 @@ namespace OnlineTest.Model
     public class OnlineTestContext : DbContext
     {
         public OnlineTestContext(DbContextOptions<OnlineTestContext> opt) : base(opt)
-        {
+        {}
 
-        }
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
             base.OnModelCreating(modelbuilder);

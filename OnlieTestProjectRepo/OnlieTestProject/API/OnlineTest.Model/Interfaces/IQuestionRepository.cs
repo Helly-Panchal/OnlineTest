@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OnlineTest.Model.Interfaces
+﻿namespace OnlineTest.Model.Interfaces
 {
     public interface IQuestionRepository
     {
-        IEnumerable<Question> GetQuestion();
+        IEnumerable<Question> GetQuestionByTestId(int testId);
         Question GetQuestionById(int id);
-        bool AddQuestion(Question question);
+        int AddQuestion(Question question);
         bool UpdateQuestion(Question question);
+        bool DeleteQuestion(Question question);
+        bool IsQuestionExists(int testId, string que);
     }
 }

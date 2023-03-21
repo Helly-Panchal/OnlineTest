@@ -1,12 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
-using OnlineTest.Services.DTO.GetDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
-using OnlineTest.Services.Services;
 
 namespace OnlineTest.Controllers
 {
@@ -27,9 +23,21 @@ namespace OnlineTest.Controllers
 
         #region Methods
         [HttpGet]
-        public ActionResult<GetTechnologyDTO> GetTechnology(int PageNo, int RowsPerPage)
+        public IActionResult GetTechnology()
         {
-            return Ok(_technologyService.GetAllTechnologyUsingPagination(PageNo, RowsPerPage));
+            return Ok(_technologyService.GetTechnology());
+        }
+
+        [HttpGet("paginated")]
+        public IActionResult GetAllTechnologyUsingPagination(int PageNumber, int RowsPerPage)
+        {
+            return Ok(_technologyService.GetAllTechnologyUsingPagination(PageNumber, RowsPerPage));
+        }
+
+        [HttpGet("id")]
+        public IActionResult GetTechnologyById(int id)
+        {
+            return Ok(_technologyService.GetTechnologyById(id));
         }
 
         [HttpPost]
@@ -42,6 +50,12 @@ namespace OnlineTest.Controllers
         public IActionResult UpdateTechnology(UpdateTechnologyDTO technology)
         {
             return Ok(_technologyService.UpdateTechnology(technology));
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteTechnology(int id)
+        {
+            return Ok(_technologyService.DeleteTechnology(id));
         }
         #endregion
     }

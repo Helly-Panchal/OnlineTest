@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace OnlineTest.Model
 {
     public class Question
@@ -14,7 +14,7 @@ namespace OnlineTest.Model
         public int CreatedBy { set; get; }
 
         [Column(TypeName = "DateTime")]
-        public DateTime CreateOn { set; get; }
+        public DateTime CreatedOn { get; set; }
 
 
         [ForeignKey("TestNavigation")]          //FK
