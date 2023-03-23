@@ -1,0 +1,47 @@
+﻿using OnlineTest.Model.Interfaces;
+
+namespace OnlineTest.Model.Repository
+{
+    public class TestLinkRepository : ITestLinkRepository
+    {
+        #region Fields
+        private readonly OnlineTestContext _context;
+        #endregion
+
+        #region Constructor
+        public TestLinkRepository(OnlineTestContext context)
+        {
+            _context = context;
+        }
+        #endregion
+
+        #region Methods
+        public int AddTestLink(TestEmailLink testEmailLink)
+        {
+            _context.Add(testEmailLink);
+            if (_context.SaveChanges() > 0)
+            {
+                return testEmailLink.Id;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public bool IsTestLinkExists(int testId, int userId)
+        {
+            var result = _context.TestEmailLinks.FirstOrDefault(t => t.TestId == testId && t.UserId == userId && t.ExpireOn > DateTime.UtcNow);
+            if (result != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+
+    }
+}

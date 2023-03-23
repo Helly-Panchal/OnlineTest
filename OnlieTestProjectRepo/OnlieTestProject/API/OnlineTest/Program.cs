@@ -73,6 +73,7 @@ builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IAnswerService, AnswerService>();
 builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
 builder.Services.AddScoped<IQuestionAnswerMapRepository, QuestionAnswerMapRepository>();
+builder.Services.AddScoped<ITestLinkRepository, TestLinkRepository>();
 #endregion
 
 var app = builder.Build();

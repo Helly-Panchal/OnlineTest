@@ -13,19 +13,23 @@ namespace OnlineTest.Services.Services
     {
         #region Fields
         private readonly IMapper _mapper;
-        private readonly ITestRepository _testRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ITechnologyRepository _technologyRepository;
+        private readonly ITestRepository _testRepository;
         private readonly IQuestionRepository _questionRepository;
         private readonly IAnswerRepository _answerRepository;
+        private readonly ITestLinkRepository _testLinkRepository;
         #endregion
 
         #region Constructor
-        public TestService(ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository,IAnswerRepository answerRepository ,IMapper mapper)
+        public TestService(IUserRepository userRepository,ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository,IAnswerRepository answerRepository ,ITestLinkRepository testLinkRepository ,IMapper mapper)
         {
-            _testRepository = testRepository;
+            _userRepository = userRepository;
             _technologyRepository = technologyRepository;
+            _testRepository = testRepository;
             _questionRepository = questionRepository;
             _answerRepository = answerRepository;
+            _testLinkRepository = testLinkRepository;
             _mapper = mapper;
         }
         #endregion
@@ -259,6 +263,75 @@ namespace OnlineTest.Services.Services
             }
             return response;
 
+        }
+
+        //testEmailLink
+        public ResponseDTO AddTestLink(int adminId, int testId, string userEmail)
+        {
+            var response = new ResponseDTO();
+            try
+            {
+                //check if user is exists or not.
+                var userByEmail = _userRepository.GetUserByEmail(userEmail);
+                if(userByEmail == null)
+                {
+                    response.Status = 400;
+                    response.Message = "Not Created";
+                    response.Error = "User not found";
+                    return response;
+                }
+
+                //check if test is exists or not.
+                var testById = _testRepository.GetTestById(testId);
+                if(testById == null)
+                {
+                    response.Status = 400;
+                    response.Message = "Not Created";
+                    response.Error = "Test not found";
+                    return response;
+                }
+
+                //check if link is already created and is not expired
+                var existsFlag = _testLinkRepository.IsTestLinkExists(testId, userByEmail.Id);
+                if (existsFlag)
+                {
+                    response.Status = 400;
+                    response.Message = "Not Created";
+                    response.Error = "Test link already exists";
+                    return response;
+                }
+
+                var testLink = new TestEmailLink
+                {
+                    TestId = testId,
+                    UserId = userByEmail.Id,
+                    Token = Guid.NewGuid(),
+                    AccessCount = 0,
+                    ExpireOn = DateTime.UtcNow.AddDays(7),
+                    IsActive = true,
+                    CreatedBy = adminId,
+                    CreatedOn = DateTime.UtcNow,
+                };
+
+                var addTest = _testLinkRepository.AddTestLink(testLink);
+                if(addTest == 0)
+                {
+                    response.Status = 400;
+                    response.Message = "Not Created";
+                    response.Error = "Test link is not added";
+                    return response;
+                }
+                response.Status = 201;
+                response.Message = "Created";
+                response.Data = addTest;
+            }
+            catch (Exception ex)
+            {
+                response.Status = 500;
+                response.Message = "Internal Server Error";
+                response.Error = ex.Message;
+            }
+            return response;
         }
         #endregion
     }

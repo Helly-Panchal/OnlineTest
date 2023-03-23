@@ -247,6 +247,53 @@ namespace OnlineTest.Model.Migrations
                     b.ToTable("Tests");
                 });
 
+            modelBuilder.Entity("OnlineTest.Model.TestEmailLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("AccessOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime>("ExpireOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("SubmittedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Token")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TestEmailLinks");
+                });
+
             modelBuilder.Entity("OnlineTest.Model.User", b =>
                 {
                     b.Property<int>("Id")
@@ -360,6 +407,25 @@ namespace OnlineTest.Model.Migrations
                         .IsRequired();
 
                     b.Navigation("TechnologyNavigation");
+                });
+
+            modelBuilder.Entity("OnlineTest.Model.TestEmailLink", b =>
+                {
+                    b.HasOne("OnlineTest.Model.Test", "TestNavigation")
+                        .WithMany()
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("OnlineTest.Model.User", "UserNavigation")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TestNavigation");
+
+                    b.Navigation("UserNavigation");
                 });
 
             modelBuilder.Entity("OnlineTest.Model.UserRole", b =>
