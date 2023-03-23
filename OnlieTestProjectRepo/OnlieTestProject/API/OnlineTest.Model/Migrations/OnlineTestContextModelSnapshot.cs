@@ -138,27 +138,24 @@ namespace OnlineTest.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("DateTime")
-                        .HasColumnName("Created_Date");
+                        .HasColumnType("datetime");
 
-                    b.Property<int>("IsStop")
-                        .HasColumnType("int")
-                        .HasColumnName("Is_Stop");
+                    b.Property<bool>("IsStop")
+                        .HasColumnType("bit");
 
                     b.Property<string>("RefreshToken")
                         .IsRequired()
-                        .HasColumnType("varchar(150)")
-                        .HasColumnName("Refresh_Token");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("User_Id");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RToken");
+                    b.ToTable("RTokens");
                 });
 
             modelBuilder.Entity("OnlineTest.Model.Role", b =>
@@ -345,13 +342,13 @@ namespace OnlineTest.Model.Migrations
 
             modelBuilder.Entity("OnlineTest.Model.RToken", b =>
                 {
-                    b.HasOne("OnlineTest.Model.User", "UserNavigation")
+                    b.HasOne("OnlineTest.Model.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("UserNavigation");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("OnlineTest.Model.Test", b =>

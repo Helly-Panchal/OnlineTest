@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using OnlineTest.Model;
 using OnlineTest.Model.Interfaces;
-using OnlineTest.Model.Repository;
 using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
 using OnlineTest.Services.DTO.GetDTO;
@@ -123,7 +117,7 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-        public ResponseDTO AddTechnology(AddTechnologyDTO technology)
+        public ResponseDTO AddTechnology(int userId, AddTechnologyDTO technology)
         {
             var response = new ResponseDTO();
             try
@@ -136,6 +130,10 @@ namespace OnlineTest.Services.Services
                     response.Error = "Technology is already exists.";
                     return response;
                 }
+
+                technology.IsActive = true;
+                technology.CreatedBy = userId;
+                technology.CreatedOn = DateTime.UtcNow;
 
                 var technologyId = _technologyRepository.AddTechnology(_mapper.Map<Technology>(technology));
 
@@ -158,7 +156,7 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-        public ResponseDTO UpdateTechnology(UpdateTechnologyDTO technology)
+        public ResponseDTO UpdateTechnology(int userId, UpdateTechnologyDTO technology)
         {
             var response = new ResponseDTO();
             try
@@ -172,13 +170,16 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
                 var technologyByName = _technologyRepository.GetTechnologyByName(technology.TechName);
-                if (technologyByName != null)
+                if (technologyByName != null && technology.Id != technologyByName.Id)
                 {
                     response.Status = 400;
                     response.Message = "Not Updated";
                     response.Error = "Technology already exists";
                     return response;
                 }
+
+                technology.ModifiedBy = userId;
+                technology.ModifiedOn = DateTime.UtcNow;
 
                 //technology.ModifiedOn = DateTime.UtcNow;
                 var updateFlag = _technologyRepository.UpdateTechnology(_mapper.Map<Technology>(technology));

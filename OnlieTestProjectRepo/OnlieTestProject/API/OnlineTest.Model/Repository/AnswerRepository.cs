@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.Design;
-using OnlineTest.Model.Interfaces;
-using OnlineTest.Model.Migrations;
+﻿using OnlineTest.Model.Interfaces;
 
 namespace OnlineTest.Model.Repository
 {
@@ -33,7 +31,7 @@ namespace OnlineTest.Model.Repository
             return (from QAMap in _context.QuestionAnswerMapping
                     join Ans in _context.Answers
                     on QAMap.AnswerId equals Ans.Id
-                    where QAMap.QuestionId == questionId
+                    where QAMap.QuestionId == questionId && QAMap.IsActive == true
                     select new Answer
                     {
                         Id = Ans.Id,
@@ -69,20 +67,17 @@ namespace OnlineTest.Model.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool IsAnswerExists(int testId, int questionId, string ans)
+        public Answer AnswerExists(int testId, int questionId, string ans)
         {
             var result = (from QAMap in _context.QuestionAnswerMapping
                           join Ans in _context.Answers
                           on QAMap.AnswerId equals Ans.Id
                           where QAMap.TestId == testId && QAMap.QuestionId == questionId && Ans.Ans == ans
-                          select new
+                          select new Answer
                           {
-                              Id = QAMap.Id
+                              Id = Ans.Id
                           }).FirstOrDefault();
-            if (result != null)
-                return true;
-            else
-                return false;
+            return result;
         }
         #endregion
     }

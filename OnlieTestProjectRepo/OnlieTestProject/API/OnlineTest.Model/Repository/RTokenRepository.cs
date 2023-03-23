@@ -1,33 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OnlineTest.Model.Interfaces;
+﻿using OnlineTest.Model.Interfaces;
 
 namespace OnlineTest.Model.Repository
 {
     public class RTokenRepository : IRTokenRepository
     {
+        #region Fields
         private readonly OnlineTestContext _context;
+        #endregion
+
+        #region Constructor
         public RTokenRepository(OnlineTestContext context)
         {
             _context = context;
         }
-        public bool Add(RToken token)
+        #endregion
+
+        #region Methods
+        public RToken GetRefreshToken(int id, string refreshToken)
         {
-            _context.RToken.Add(token);
-            return _context.SaveChanges() > 0;
+            return _context.RTokens.FirstOrDefault(x => x.UserId == id && x.RefreshToken == refreshToken);
         }
-        public bool Expire(RToken token)
+
+        public bool AddRefreshToken(RToken token)
         {
-            _context.RToken.Update(token);
+            _context.RTokens.Add(token);
             return _context.SaveChanges() > 0;
         }
 
-        public RToken Get(string refreshToken)
+        public bool ExpireRefreshToken(RToken token)
         {
-            return _context.RToken.FirstOrDefault(predicate: x => x.RefreshToken == refreshToken);
+            _context.Entry(token).Property("IsStop").IsModified = true;
+            return _context.SaveChanges() > 0;
         }
+        #endregion
     }
 }

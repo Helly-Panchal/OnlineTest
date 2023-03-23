@@ -8,9 +8,9 @@ namespace OnlineTest.Services.DTO.AddDTO
     {
         [Required(ErrorMessage = "Ans is required. Please Enter Ans")]
         public string Ans { get; set; }
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; }
         public int CreatedBy { set; get; }
-        public DateTime CreateOn { set; get; } = DateTime.UtcNow;   
+        public DateTime CreateOn { set; get; }
         public int TestId { set; get; }
         public int QuestionId { set; get; }
     }

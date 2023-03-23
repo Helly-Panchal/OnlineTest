@@ -54,17 +54,10 @@ namespace OnlineTest.Model.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public bool IsQuestionExists(int testId, string que)
+        public Question QuestionExists(Question question)
         {
-            var result = _context.Questions.Where(q => q.TestId == testId && q.Que == que && q.IsActive == true);
-            if(result != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            var result = _context.Questions.FirstOrDefault(q => q.TestId == question.TestId && q.Que == question.Que && q.IsActive == true);
+            return result;
         }
         #endregion
     }

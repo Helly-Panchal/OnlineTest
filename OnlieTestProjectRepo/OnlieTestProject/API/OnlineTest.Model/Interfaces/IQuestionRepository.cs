@@ -4,9 +4,10 @@
     {
         IEnumerable<Question> GetQuestionByTestId(int testId);
         Question GetQuestionById(int id);
+        Question QuestionExists(Question question);
         int AddQuestion(Question question);
         bool UpdateQuestion(Question question);
         bool DeleteQuestion(Question question);
-        bool IsQuestionExists(int testId, string que);
+       
     }
 }

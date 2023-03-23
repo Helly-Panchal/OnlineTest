@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OnlineTest.Model;
-using OnlineTest.Model.Interfaces;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineTest.Services.DTO.AddDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 using OnlineTest.Services.Interface;
@@ -9,6 +9,7 @@ namespace OnlineTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AnswerController : ControllerBase
     {
         #region Fields
@@ -32,7 +33,7 @@ namespace OnlineTest.Controllers
         [HttpPost]
         public IActionResult AddAnswer(AddAnswerDTO answer)
         {
-            return Ok(_answerService.AddAnswer(answer));
+            return Ok(_answerService.AddAnswer(Convert.ToInt32(User.FindFirstValue("Id")), answer));
         }
 
         [HttpPut]

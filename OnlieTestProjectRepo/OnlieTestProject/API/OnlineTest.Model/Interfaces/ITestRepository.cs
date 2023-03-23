@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OnlineTest.Model.Interfaces
+﻿namespace OnlineTest.Model.Interfaces
 {
     public interface ITestRepository
     {
@@ -15,5 +9,6 @@ namespace OnlineTest.Model.Interfaces
         int AddTest(Test test);
         bool UpdateTest(Test test);
         bool DeleteTest(Test test);
+        Test TestExists(Test test);
     }
 }

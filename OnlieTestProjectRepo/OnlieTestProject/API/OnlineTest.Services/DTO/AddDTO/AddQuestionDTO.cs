@@ -33,8 +33,8 @@ namespace OnlineTest.Services.DTO.AddDTO
 
         public int CreatedBy { set; get; }
 
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
-        public bool IsActive { get; set; } = true;
+        public DateTime CreatedOn { get; set; }
+        public bool IsActive { get; set; }
 
     }
 }

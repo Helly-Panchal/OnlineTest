@@ -22,7 +22,7 @@ namespace OnlineTest.Services.DTO.AddDTO
         [StringLength(20, MinimumLength = 5, ErrorMessage = "Password should be minimum {2} to maximum {1} character long")]
         public string Password { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; }
         [Required]
         public bool IsAdmin { get; set; }
     }

@@ -138,6 +138,9 @@ namespace OnlineTest.Services.Services
                 }
 
                 user.Password = _hasherService.Hash(user.Password);
+
+                user.IsActive = true;
+
                 var userId = _userRepository.AddUser(_mapper.Map<User>(user));
                 if(userId == 0)
                 {
@@ -236,6 +239,7 @@ namespace OnlineTest.Services.Services
                 }
 
                 userById.IsActive = false;
+
                 var deleteFlag = _userRepository.DeleteUser(userById);
                 if (deleteFlag)
                 {
@@ -257,14 +261,17 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-        public GetUserDTO IsUserExists(TokenDTO user)
+        public GetUserDTO IsUserExists(LoginDTO user)
         {
-            var result = _userRepository.GetUserByEmail(user.Username);
+            var result = _userRepository.GetUserByEmail(user.Email);
             if (result == null || result.Password != _hasherService.Hash(user.Password))
             {
                 return null;
             }
-            return _mapper.Map<GetUserDTO>(result);
+            else
+            {
+                return _mapper.Map<GetUserDTO>(result);
+            }
         }
         #endregion
     }

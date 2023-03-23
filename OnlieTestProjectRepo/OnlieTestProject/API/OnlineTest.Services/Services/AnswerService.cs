@@ -29,7 +29,7 @@ namespace OnlineTest.Services.Services
             _questionAnswerMapRepository = questionAnswerMapRepository;
             _mapper = mapper;
         }
-        #endregion
+        #endregion  
 
         #region Methods
         public ResponseDTO GetAnswer()
@@ -79,7 +79,7 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-        public ResponseDTO AddAnswer(AddAnswerDTO answer)
+        public ResponseDTO AddAnswer(int userId, AddAnswerDTO answer)
         {
             var response = new ResponseDTO();
             try
@@ -102,14 +102,18 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var existsFlag = _answerRepository.IsAnswerExists(answer.TestId, answer.QuestionId, answer.Ans);
-                if (existsFlag)
+                var ansExists = _answerRepository.AnswerExists(answer.TestId, answer.QuestionId, answer.Ans);
+                if (ansExists != null)
                 {
                     response.Status = 400;
                     response.Message = "Not Created";
                     response.Error = "Answer already exists";
                     return response;
                 }
+
+                answer.IsActive = true;
+                answer.CreatedBy = userId;
+                answer.CreateOn = DateTime.UtcNow;
 
                 var answerId = _answerRepository.AddAnswer(_mapper.Map<Answer>(answer));
                 if (answerId == 0)
@@ -155,8 +159,8 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var existsFlag = _answerRepository.IsAnswerExists(answer.TestId, answer.QuestionId, answer.Ans);
-                if (existsFlag)
+                var ansExists = _answerRepository.AnswerExists(answer.TestId, answer.QuestionId, answer.Ans);
+                if (ansExists != null && answer.Id != ansExists.Id)
                 {
                     response.Status = 400;
                     response.Message = "Not Updated";

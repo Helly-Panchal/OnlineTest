@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using OnlineTest.Model;
 using OnlineTest.Model.Interfaces;
+using OnlineTest.Model.Repository;
 using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
 using OnlineTest.Services.DTO.GetDTO;
@@ -14,12 +15,14 @@ namespace OnlineTest.Services.Services
         #region Fields
         private readonly IMapper _mapper;
         private readonly IQuestionRepository _questionRepository;
+        private readonly IAnswerRepository _answerRepository;
         private readonly ITestRepository _testRepository;
         #endregion
 
         #region Constructor
-        public QuestionService(IQuestionRepository questionRepository, ITestRepository testRepository, IMapper mapper)
+        public QuestionService(IQuestionRepository questionRepository, ITestRepository testRepository, IAnswerRepository answerRepository ,IMapper mapper)
         {
+            _answerRepository = answerRepository;
             _questionRepository = questionRepository;
             _testRepository = testRepository;
             _mapper = mapper;
@@ -69,6 +72,7 @@ namespace OnlineTest.Services.Services
                 }
 
                 var result = _mapper.Map<GetQuestionDTO>(questionById);
+                result.Answers = _mapper.Map<List<GetAnswerDTO>>(_answerRepository.GetAnswerByQuestionId(questionById.Id).ToList());
 
                 response.Status = 200;
                 response.Data = result;
@@ -82,7 +86,7 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-        public ResponseDTO AddQuestion(AddQuestionDTO question)
+        public ResponseDTO AddQuestion(int userId,AddQuestionDTO question)
         {
             var response = new ResponseDTO();
             try
@@ -97,14 +101,18 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var existsFlag = _questionRepository.IsQuestionExists(question.TestId, question.Que);
-                if (existsFlag)
+                var questionExists = _questionRepository.QuestionExists(_mapper.Map<Question>(question));
+                if (questionExists != null)
                 {
                     response.Status = 400;
                     response.Message = "Not Created";
                     response.Error = "Question already exists";
                     return response;
                 }
+
+                question.IsActive = true;
+                question.CreatedBy = userId;
+                question.CreatedOn = DateTime.UtcNow;
 
                 var questionId = _questionRepository.AddQuestion(_mapper.Map<Question>(question));
                 if (questionId == 0)
@@ -140,8 +148,8 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
-                var existFlag = _questionRepository.IsQuestionExists(questionById.TestId, question.Que);
-                if (existFlag)
+                var questionExists = _questionRepository.QuestionExists(_mapper.Map<Question>(question));
+                if (questionExists != null && question.Id != questionExists.Id)
                 {
                     response.Status = 400;
                     response.Message = "Not Updated";
@@ -183,7 +191,9 @@ namespace OnlineTest.Services.Services
                     response.Error = "Question not found";
                     return response;
                 }
+
                 questionById.IsActive = false;
+                
                 var deleteFlag = _questionRepository.DeleteQuestion(_mapper.Map<Question>(questionById));
                 if (deleteFlag)
                 {

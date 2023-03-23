@@ -10,6 +10,12 @@ namespace OnlineTest.Services.AutoMapperProfile
     {
         public MapperProfile()
         {
+            #region Token
+            CreateMap<RToken, GetRTokenDTO>();
+            CreateMap<AddRTokenDTO, RToken>();
+            CreateMap<UpdateRTokenDTO, RToken>();
+            #endregion
+
             #region User
             CreateMap<User, GetUserDTO>();
             CreateMap<AddUserDTO, User>();
