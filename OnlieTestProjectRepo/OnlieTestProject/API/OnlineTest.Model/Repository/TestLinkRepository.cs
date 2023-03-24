@@ -16,6 +16,11 @@ namespace OnlineTest.Model.Repository
         #endregion
 
         #region Methods
+
+        public TestEmailLink GetTestLink(Guid token)
+        {
+            return _context.TestEmailLinks.FirstOrDefault(t => t.Token == token && t.ExpireOn > DateTime.UtcNow);
+        }
         public int AddTestLink(TestEmailLink testEmailLink)
         {
             _context.Add(testEmailLink);
@@ -40,6 +45,12 @@ namespace OnlineTest.Model.Repository
             {
                 return false;
             }
+        }
+
+        public bool UpdateTestLink(TestEmailLink testLink)
+        {
+            _context.Entry(testLink).Property("AccessOn").IsModified = true;
+            return _context.SaveChanges() > 0;
         }
         #endregion
 

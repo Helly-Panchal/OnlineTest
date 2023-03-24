@@ -8503,11 +8503,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest\\OnlineTest.csproj",
+      "projectUniqueName": "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest\\OnlineTest.csproj",
       "projectName": "OnlineTest",
-      "projectPath": "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest\\OnlineTest.csproj",
+      "projectPath": "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest\\OnlineTest.csproj",
       "packagesPath": "C:\\Users\\HELLY\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest\\obj\\",
+      "outputPath": "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\HELLY\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -8524,11 +8524,11 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\OnlineTest.Model.csproj": {
-              "projectPath": "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\OnlineTest.Model.csproj"
+            "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\OnlineTest.Model.csproj": {
+              "projectPath": "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\OnlineTest.Model.csproj"
             },
-            "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Services\\OnlineTest.Services.csproj": {
-              "projectPath": "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Services\\OnlineTest.Services.csproj"
+            "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Services\\OnlineTest.Services.csproj": {
+              "projectPath": "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Services\\OnlineTest.Services.csproj"
             }
           }
         }

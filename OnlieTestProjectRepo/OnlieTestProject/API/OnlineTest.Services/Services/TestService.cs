@@ -22,7 +22,7 @@ namespace OnlineTest.Services.Services
         #endregion
 
         #region Constructor
-        public TestService(IUserRepository userRepository,ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository,IAnswerRepository answerRepository ,ITestLinkRepository testLinkRepository ,IMapper mapper)
+        public TestService(IUserRepository userRepository, ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository, IAnswerRepository answerRepository, ITestLinkRepository testLinkRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _technologyRepository = technologyRepository;
@@ -89,7 +89,7 @@ namespace OnlineTest.Services.Services
                 var result = _mapper.Map<GetTestDTO>(testById);
 
                 var questionsList = _mapper.Map<List<GetQuestionDTO>>(_questionRepository.GetQuestionByTestId(testById.Id).ToList());
-                foreach(var question in questionsList)
+                foreach (var question in questionsList)
                 {
                     var answerList = _mapper.Map<List<GetAnswerDTO>>(_answerRepository.GetAnswerByQuestionId(question.Id).ToList());
                     question.Answers = answerList;
@@ -127,7 +127,7 @@ namespace OnlineTest.Services.Services
                 response.Message = "Ok";
                 response.Data = result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.Status = 500;
                 response.Message = "Internal Server Error";
@@ -163,7 +163,7 @@ namespace OnlineTest.Services.Services
                 test.CreatedOn = DateTime.UtcNow;
 
                 var testId = _testRepository.AddTest(_mapper.Map<Test>(test));
-                if(testId == 0)
+                if (testId == 0)
                 {
                     response.Status = 400;
                     response.Message = "Not Created";
@@ -273,7 +273,7 @@ namespace OnlineTest.Services.Services
             {
                 //check if user is exists or not.
                 var userByEmail = _userRepository.GetUserByEmail(userEmail);
-                if(userByEmail == null)
+                if (userByEmail == null)
                 {
                     response.Status = 400;
                     response.Message = "Not Created";
@@ -283,7 +283,7 @@ namespace OnlineTest.Services.Services
 
                 //check if test is exists or not.
                 var testById = _testRepository.GetTestById(testId);
-                if(testById == null)
+                if (testById == null)
                 {
                     response.Status = 400;
                     response.Message = "Not Created";
@@ -314,7 +314,7 @@ namespace OnlineTest.Services.Services
                 };
 
                 var addTest = _testLinkRepository.AddTestLink(testLink);
-                if(addTest == 0)
+                if (addTest == 0)
                 {
                     response.Status = 400;
                     response.Message = "Not Created";
@@ -324,6 +324,44 @@ namespace OnlineTest.Services.Services
                 response.Status = 201;
                 response.Message = "Created";
                 response.Data = addTest;
+            }
+            catch (Exception ex)
+            {
+                response.Status = 500;
+                response.Message = "Internal Server Error";
+                response.Error = ex.Message;
+            }
+            return response;
+        }
+
+        public ResponseDTO GetTestLink(string token, string userEmail)
+        {
+            var response = new ResponseDTO();
+            try
+            {
+                var testLink = _testLinkRepository.GetTestLink(Guid.Parse(token));
+                if (testLink == null)
+                {
+                    response.Status = 400;
+                    response.Message = "Not Created";
+                    response.Error = "Test link is not exists or it is expired";
+                    return response;
+                }
+
+                var userById = _userRepository.GetUserById(testLink.UserId);
+                if (userEmail.ToLower() != userById.Email.ToLower())
+                {
+                    response.Status = 400;
+                    response.Message = "Bad Request";
+                    response.Error = "Email is incorrect";
+                    return response;
+                }
+                response = GetTestById(testLink.TestId);
+                if(response.Status == 200)
+                {
+                    testLink.AccessOn = DateTime.UtcNow;
+                    _testLinkRepository.UpdateTestLink(testLink);
+                }
             }
             catch (Exception ex)
             {

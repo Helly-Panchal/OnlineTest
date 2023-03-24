@@ -3515,11 +3515,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\OnlineTest.Model.csproj",
+      "projectUniqueName": "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\OnlineTest.Model.csproj",
       "projectName": "OnlineTest.Model",
-      "projectPath": "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\OnlineTest.Model.csproj",
+      "projectPath": "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\OnlineTest.Model.csproj",
       "packagesPath": "C:\\Users\\HELLY\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\HELLY\\Desktop\\New folder\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\obj\\",
+      "outputPath": "C:\\Users\\HELLY\\Desktop\\Internship Project\\OnlieTestProjectRepo\\OnlieTestProject\\API\\OnlineTest.Model\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\HELLY\\AppData\\Roaming\\NuGet\\NuGet.Config",

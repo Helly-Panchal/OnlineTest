@@ -67,6 +67,12 @@ namespace OnlineTest.Controllers
         {
             return Ok(_testService.AddTestLink(Convert.ToInt32(User.FindFirstValue("Id")), testId,userEmail));
         }
+
+        [HttpGet("link")]
+        public IActionResult GetTestLink(string token, string userEmail)
+        {
+            return Ok(_testService.GetTestLink(token, userEmail));
+        }
         #endregion
     }
 }
