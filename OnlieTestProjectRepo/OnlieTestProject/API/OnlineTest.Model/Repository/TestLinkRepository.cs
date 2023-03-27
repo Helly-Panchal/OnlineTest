@@ -50,6 +50,7 @@ namespace OnlineTest.Model.Repository
         public bool UpdateTestLink(TestEmailLink testLink)
         {
             _context.Entry(testLink).Property("AccessOn").IsModified = true;
+            _context.Entry(testLink).Property("AccessCount").IsModified = true;
             return _context.SaveChanges() > 0;
         }
         #endregion

@@ -14,6 +14,7 @@ namespace OnlineTest.Services.Services
         #region Fields
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly ITechnologyRepository _technologyRepository;
         private readonly ITestRepository _testRepository;
         private readonly IQuestionRepository _questionRepository;
@@ -22,7 +23,7 @@ namespace OnlineTest.Services.Services
         #endregion
 
         #region Constructor
-        public TestService(IUserRepository userRepository, ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository, IAnswerRepository answerRepository, ITestLinkRepository testLinkRepository, IMapper mapper)
+        public TestService(IUserRepository userRepository, IUserRoleRepository userRoleRepository ,ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository, IAnswerRepository answerRepository, ITestLinkRepository testLinkRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _technologyRepository = technologyRepository;
@@ -273,12 +274,27 @@ namespace OnlineTest.Services.Services
             {
                 //check if user is exists or not.
                 var userByEmail = _userRepository.GetUserByEmail(userEmail);
+                int userId;
                 if (userByEmail == null)
                 {
-                    response.Status = 400;
-                    response.Message = "Not Created";
-                    response.Error = "User not found";
-                    return response;
+                    var user = new User
+                    {
+                        Name = userEmail,
+                        Email = userEmail,
+                        Password = "Password",
+                        MobileNo = "0000000000",
+                        IsActive = true
+                    };
+                    userId = _userRepository.AddUser(user);
+                    _userRoleRepository.AddRole(new UserRole
+                    {
+                        UserId = userId,
+                        RoleId = 2
+                    });
+                }
+                else
+                {
+                    userId = userByEmail.Id;
                 }
 
                 //check if test is exists or not.
@@ -288,7 +304,7 @@ namespace OnlineTest.Services.Services
                     response.Status = 400;
                     response.Message = "Not Created";
                     response.Error = "Test not found";
-                    return response;
+                    return response;                   
                 }
 
                 //check if link is already created and is not expired
@@ -300,6 +316,7 @@ namespace OnlineTest.Services.Services
                     response.Error = "Test link already exists";
                     return response;
                 }
+                
 
                 var testLink = new TestEmailLink
                 {
@@ -348,6 +365,8 @@ namespace OnlineTest.Services.Services
                     return response;
                 }
 
+                testLink.AccessCount += 1;   
+               
                 var userById = _userRepository.GetUserById(testLink.UserId);
                 if (userEmail.ToLower() != userById.Email.ToLower())
                 {
