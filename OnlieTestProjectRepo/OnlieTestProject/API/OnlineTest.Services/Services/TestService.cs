@@ -20,10 +20,11 @@ namespace OnlineTest.Services.Services
         private readonly IQuestionRepository _questionRepository;
         private readonly IAnswerRepository _answerRepository;
         private readonly ITestLinkRepository _testLinkRepository;
+        private readonly IAnswerSheetRepository _answerSheetRepository;
         #endregion
 
         #region Constructor
-        public TestService(IUserRepository userRepository, IUserRoleRepository userRoleRepository ,ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository, IAnswerRepository answerRepository, ITestLinkRepository testLinkRepository, IMapper mapper)
+        public TestService(IUserRepository userRepository, IUserRoleRepository userRoleRepository ,ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository, IAnswerRepository answerRepository, ITestLinkRepository testLinkRepository, IAnswerSheetRepository answerSheetRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _technologyRepository = technologyRepository;
@@ -31,6 +32,7 @@ namespace OnlineTest.Services.Services
             _questionRepository = questionRepository;
             _answerRepository = answerRepository;
             _testLinkRepository = testLinkRepository;
+            _answerSheetRepository = answerSheetRepository;
             _mapper = mapper;
         }
         #endregion
@@ -350,7 +352,6 @@ namespace OnlineTest.Services.Services
             }
             return response;
         }
-
         public ResponseDTO GetTestLink(string token, string userEmail)
         {
             var response = new ResponseDTO();
@@ -366,7 +367,7 @@ namespace OnlineTest.Services.Services
                 }
 
                 testLink.AccessCount += 1;   
-               
+                
                 var userById = _userRepository.GetUserById(testLink.UserId);
                 if (userEmail.ToLower() != userById.Email.ToLower())
                 {
@@ -383,6 +384,64 @@ namespace OnlineTest.Services.Services
                 }
             }
             catch (Exception ex)
+            {
+                response.Status = 500;
+                response.Message = "Internal Server Error";
+                response.Error = ex.Message;
+            }
+            return response;
+        }
+
+        
+        //user submitted data
+        public ResponseDTO SubmittedTestData(AddAnswerSheetDTO answerSheet)
+        {
+            var response = new ResponseDTO();
+            try
+            {            
+                //check if test is already submitted or not.
+                var testLink = _testLinkRepository.GetTestLink(answerSheet.Token);
+                if(testLink.SubmittedOn != null)
+                {
+                    response.Status = 400;
+                    response.Message = "Bad Request";
+                    response.Error = "Test is already submitted";
+                    return response;
+                }
+
+                //Check if test has been expired or not.
+                if(testLink.ExpireOn <= DateTime.UtcNow)
+                {
+                    response.Status = 400;
+                    response.Message = "Bad Request";
+                    response.Error = "Test link has expired";
+                    return response;
+                }
+
+                //add this answersheet to database
+                answerSheet.CreatedTime = DateTime.UtcNow;
+                List<AnswerSheet> answerSheets = new List<AnswerSheet>();
+                foreach(var question in  answerSheet.Questions)
+                {
+                    var sheet = new AnswerSheet
+                    {
+                        Token = answerSheet.Token,
+                        QuestionId = question.QuestionId,
+                        AnswerId = question.AnswerId,
+                        CreatedTime = answerSheet.CreatedTime
+                    };
+                    answerSheets.Add(sheet);                                //added to list
+                }
+                _answerSheetRepository.AddAnswerSheet(answerSheets);        //passed list to the db.
+
+                //update the value of submit on
+                testLink.SubmittedOn = DateTime.UtcNow;
+                _testLinkRepository.UpdateTestLink(testLink);
+
+                response.Status = 200;
+                response.Message = "Ok";
+            }
+            catch(Exception ex)
             {
                 response.Status = 500;
                 response.Message = "Internal Server Error";

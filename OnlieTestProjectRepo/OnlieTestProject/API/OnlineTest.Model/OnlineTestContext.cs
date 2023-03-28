@@ -14,7 +14,6 @@ namespace OnlineTest.Model
             {
                 fkey.DeleteBehavior = DeleteBehavior.Restrict;
             }
-
         }
 
         public DbSet<User> Users { get; set; }
@@ -27,5 +26,7 @@ namespace OnlineTest.Model
         public DbSet<Answer> Answers { get; set; }
         public DbSet<QuestionAnswerMap> QuestionAnswerMapping { get; set; }
         public DbSet<TestEmailLink> TestEmailLinks { get; set; }
+        public DbSet<AnswerSheet> AnswerSheets { get; set; }
+
     }
 }

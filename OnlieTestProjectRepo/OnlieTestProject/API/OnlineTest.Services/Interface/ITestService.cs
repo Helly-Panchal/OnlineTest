@@ -1,4 +1,5 @@
-﻿using OnlineTest.Services.DTO;
+﻿using OnlineTest.Model.Repository;
+using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
 using OnlineTest.Services.DTO.UpdateDTO;
 
@@ -17,5 +18,8 @@ namespace OnlineTest.Services.Interface
         //TestEmailLink
         ResponseDTO GetTestLink(string token, string UserEmail);
         ResponseDTO AddTestLink(int adminId, int testId, string userEmail);
+
+        //Submitted data
+        ResponseDTO SubmittedTestData(AddAnswerSheetDTO answerSheet);
     }
 }

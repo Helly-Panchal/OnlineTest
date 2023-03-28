@@ -48,6 +48,31 @@ namespace OnlineTest.Model.Migrations
                     b.ToTable("Answers");
                 });
 
+            modelBuilder.Entity("OnlineTest.Model.AnswerSheet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnswerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Token")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AnswerSheets");
+                });
+
             modelBuilder.Entity("OnlineTest.Model.Question", b =>
                 {
                     b.Property<int>("Id")
