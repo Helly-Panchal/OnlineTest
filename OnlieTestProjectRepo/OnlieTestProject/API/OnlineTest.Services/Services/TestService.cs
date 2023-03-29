@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using OnlineTest.Model;
 using OnlineTest.Model.Interfaces;
+using OnlineTest.Model.Repository;
 using OnlineTest.Services.DTO;
 using OnlineTest.Services.DTO.AddDTO;
 using OnlineTest.Services.DTO.GetDTO;
@@ -21,10 +22,12 @@ namespace OnlineTest.Services.Services
         private readonly IAnswerRepository _answerRepository;
         private readonly ITestLinkRepository _testLinkRepository;
         private readonly IAnswerSheetRepository _answerSheetRepository;
+        private readonly IMailService _mailService;
+        private readonly IMailOutBoundRepository _mailOutBoundRepository;
         #endregion
 
         #region Constructor
-        public TestService(IUserRepository userRepository, IUserRoleRepository userRoleRepository ,ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository, IAnswerRepository answerRepository, ITestLinkRepository testLinkRepository, IAnswerSheetRepository answerSheetRepository, IMapper mapper)
+        public TestService(IUserRepository userRepository, IUserRoleRepository userRoleRepository , ITestRepository testRepository, ITechnologyRepository technologyRepository, IQuestionRepository questionRepository, IAnswerRepository answerRepository, ITestLinkRepository testLinkRepository, IAnswerSheetRepository answerSheetRepository, IMapper mapper, IMailService mailService, IMailOutBoundRepository mailOutBoundRepository)
         {
             _userRepository = userRepository;
             _technologyRepository = technologyRepository;
@@ -34,6 +37,8 @@ namespace OnlineTest.Services.Services
             _testLinkRepository = testLinkRepository;
             _answerSheetRepository = answerSheetRepository;
             _mapper = mapper;
+            _mailService = mailService;
+            _mailOutBoundRepository = mailOutBoundRepository;
         }
         #endregion
 
@@ -340,6 +345,27 @@ namespace OnlineTest.Services.Services
                     response.Error = "Test link is not added";
                     return response;
                 }
+
+                // send email to candidate
+                var mail = new MailDTO
+                {
+                    To = userEmail,
+                    Subject = "Link to begin test",
+                    Body = $"<p>Hi,</p><p>Here is your <a href=\"{testLink.Token}\" target=\"_blank\">link</a> to begin the test.</p><p>All the best!</p>"
+                };
+                _mailService.SendMail(mail);
+
+                // store record in email outbound table
+                var mailOutbound = new MailOutBound
+                {
+                    To = mail.To,
+                    Body = mail.Body,
+                    TestLinkId = testId,
+                    CreatedBy = adminId,
+                    CreatedOn = DateTime.UtcNow
+                };
+                _mailOutBoundRepository.AddMailOutBound(mailOutbound);
+
                 response.Status = 201;
                 response.Message = "Created";
                 response.Data = addTest;
