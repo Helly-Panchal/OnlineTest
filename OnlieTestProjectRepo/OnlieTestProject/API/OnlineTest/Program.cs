@@ -15,6 +15,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 ConfigureJwtAuthService(builder.Services);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("corsapp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -92,6 +103,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("corsapp");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -128,26 +141,5 @@ void ConfigureJwtAuthService(IServiceCollection services)
             RoleClaimType = "Role",
             ClockSkew = TimeSpan.Zero
         };
-        //var events = new JwtBearerEvents();
-        //events.OnAuthenticationFailed = async context =>
-        //{
-        //    //context.HandleResponse();
-        //    context.Response.StatusCode = 401;
-        //    context.Response.Headers.Append("UnAuthenticat", "");
-        //    await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-        //    {
-        //        data = "",
-        //        status = 401,
-        //        message = "You are not Authenticat to use API."
-        //    }));
-        //};
-        //events.OnForbidden = async context =>
-        //{
-        //    //context.HandleResponse();
-        //    context.Response.StatusCode = 403;
-        //    context.Response.Headers.Append("UnAuthorized", "");
-        //    await context.Response.WriteAsync("403 Forbidden");
-        //};
-        //options.Events = events;
     });
 }
